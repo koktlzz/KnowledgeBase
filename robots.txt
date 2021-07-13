@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://koktlzz.github.io/sitemap.xml

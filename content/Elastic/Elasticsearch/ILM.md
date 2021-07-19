@@ -54,18 +54,18 @@ ILM 控制每个阶段执行动作的顺序和与每个动作相关的索引操�
 
 |       | Hot     | Warm    | Cold     | Delete    |
 | ------------------- | ---- | ---- | ---- | ------ |
-| Set Priority        | ☑️    | ☑️    | ☑️    |        |
-| Unfollow            | ☑️    | ☑️    | ☑️    |        |
-| Rollover            | ☑️    |      |      |        |
-| Read-Only           | ☑️    | ☑️    |      |        |
-| Shrink              | ☑️    | ☑️    |      |        |
-| Force merge         | ☑️    | ☑️    |      |        |
-| Allocate            |      | ☑️    | ☑️    |        |
-| Migrate             |      | ☑️    | ☑️    |        |
-| Freeze              |      |      | ☑️    |        |
-| Searchable Snapshot | ☑️    |      | ☑️    |        |
-| Wait For Snapshot   |      |      |      | ☑️      |
-| Delete              |      |      |      | ☑️      |
+| Set Priority        | $\checkmark$    | $\checkmark$    | $\checkmark$    |        |
+| Unfollow            | $\checkmark$    | $\checkmark$    | $\checkmark$    |        |
+| Rollover            | $\checkmark$    |      |      |        |
+| Read-Only           | $\checkmark$    | $\checkmark$    |      |        |
+| Shrink              | $\checkmark$    | $\checkmark$    |      |        |
+| Force merge         | $\checkmark$    | $\checkmark$    |      |        |
+| Allocate            |      | $\checkmark$    | $\checkmark$    |        |
+| Migrate             |      | $\checkmark$    | $\checkmark$    |        |
+| Freeze              |      |      | $\checkmark$    |        |
+| Searchable Snapshot | $\checkmark$    |      | $\checkmark$    |        |
+| Wait For Snapshot   |      |      |      | $\checkmark$      |
+| Delete              |      |      |      | $\checkmark$      |
 
 ### Set Priority
 

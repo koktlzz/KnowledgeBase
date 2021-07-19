@@ -79,7 +79,7 @@ status:
 ![demo.001.jpeg.001.jpeg.001](https://cdn.jsdelivr.net/gh/koktlzz/ImgBed@master/demo.001.jpeg.001.jpeg.001.jpeg)
 
 - Pod 在启动时会创建一个网络设备，即 Pause 容器，它会为 Pod 创建一个 [Network namespace](/docker/docker核心原理/namespace隔离/#network)；
-- Pod 中的其他容器（如图中的 CTR1、CTR2）在启动时使用系统调用 [setns()](/docker/docker 核心原理/namespace 隔离/#setns) 加入 Pause 容器的 Network namespace 中，因此能够通过 localhost 互相访问彼此暴露的端口和服务；
+- Pod 中的其他容器（如图中的 CTR1、CTR2）在启动时使用系统调用 [setns()](/docker/docker核心原理/namespace隔离/#setns) 加入 Pause 容器的 Network namespace 中，因此能够通过 localhost 互相访问彼此暴露的端口和服务；
 - Kubenet 插件为每个节点创建 cbr0 网桥并为每一个 Pod 创建 veth 接口，从而实现 Pod Network namespace 与 Root Network namespace 之间的通信。
 
 ### 共享存储

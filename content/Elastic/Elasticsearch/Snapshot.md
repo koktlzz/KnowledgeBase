@@ -11,7 +11,7 @@ weight: 800
 
 我们可以对整个 Elasticsearch 集群或集群中的部分索引/数据流拍摄快照，从而实现数据的备份。
 
-## 快照仓库（snapshot repository）
+## 快照仓库
 
 在创建快照前，我们必须注册一个可以存放快照的仓库 snapshot repository。snapshot repository 既可以是本地仓库，也可以是云服务商通过 [对象存储技术](https://www.zhihu.com/question/21536660)（Object-based Storage）提供的远程仓库，如 Amazon S3, HDFS, Microsoft Azure, 和 Google Cloud Storage 等。如果在多个集群中注册同一快照存储库，则应当只有一个集群具有对该仓库的读写权限，仓库对其他集群应设置为只读。
 
@@ -19,7 +19,7 @@ weight: 800
 
 ![20210308145624](https://cdn.jsdelivr.net/gh/koktlzz/NoteImg@main/20210308145624.png)
 
-## 快照生命周期管理（SLM）
+## 快照生命周期管理
 
 当我们创建了一个快照仓库后，便可以通过 [Snapshot and restore APIs](https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshot-restore-apis.html) 手动为集群中的索引或数据流创建快照了。但在实际应用中，我们往往需要 Elasticsearch 能够每隔一段时间便自动拍摄快照，这便是快照生命周期管理 SLM（Snapshot Lifecycle Management）策略的作用。
 
@@ -76,7 +76,7 @@ GET /_slm/stats
 }
 ```
 
-## 可搜索快照（Searchable snapshot）
+## 可搜索快照
 
 ### 创建
 

@@ -261,7 +261,7 @@ PUT _ilm/policy/my_policy
 
 ### Searchable Snapshot
 
-为索引拍摄快照，并将其挂载为 [可搜索快照](/elastic/elasticsearch/snapshot/#可搜索快照 searchable-snapshot)。想在 Hot 阶段执行该动作，必须存在 Rollover 动作的配置，否则将被 ILM 拒绝。若在 Hot 阶段执行 Searchable Snapshot，则在后续阶段中无法定义任何 Shrink, Force merge 和 Freeze 动作。默认情况下，当索引在 Delete 阶段被删除后，相应的快照也随之删除。
+为索引拍摄快照，并将其挂载为 [可搜索快照](/elastic/elasticsearch/snapshot/#可搜索快照)。想在 Hot 阶段执行该动作，必须存在 Rollover 动作的配置，否则将被 ILM 拒绝。若在 Hot 阶段执行 Searchable Snapshot，则在后续阶段中无法定义任何 Shrink, Force merge 和 Freeze 动作。默认情况下，当索引在 Delete 阶段被删除后，相应的快照也随之删除。
 
 ```json
 PUT _ilm/policy/my_policy

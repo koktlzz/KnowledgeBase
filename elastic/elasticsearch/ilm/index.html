@@ -118,7 +118,7 @@ ILM 控制每个阶段执行动作的顺序和与每个动作相关的索引操�
     }
   }
 }
-</code></pre></div><h3 id=searchable-snapshot>Searchable Snapshot<a href=#searchable-snapshot class=anchor aria-hidden=true>#</a></h3><p>为索引拍摄快照，并将其挂载为 [可搜索快照](/elastic/elasticsearch/snapshot/#可搜索快照 searchable-snapshot)。想在 Hot 阶段执行该动作，必须存在 Rollover 动作的配置，否则将被 ILM 拒绝。若在 Hot 阶段执行 Searchable Snapshot，则在后续阶段中无法定义任何 Shrink, Force merge 和 Freeze 动作。默认情况下，当索引在 Delete 阶段被删除后，相应的快照也随之删除。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>PUT _ilm/policy/my_policy
+</code></pre></div><h3 id=searchable-snapshot>Searchable Snapshot<a href=#searchable-snapshot class=anchor aria-hidden=true>#</a></h3><p>为索引拍摄快照，并将其挂载为 <a href=https://koktlzz.github.io/elastic/elasticsearch/snapshot/#%E5%8F%AF%E6%90%9C%E7%B4%A2%E5%BF%AB%E7%85%A7>可搜索快照</a>。想在 Hot 阶段执行该动作，必须存在 Rollover 动作的配置，否则将被 ILM 拒绝。若在 Hot 阶段执行 Searchable Snapshot，则在后续阶段中无法定义任何 Shrink, Force merge 和 Freeze 动作。默认情况下，当索引在 Delete 阶段被删除后，相应的快照也随之删除。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>PUT _ilm/policy/my_policy
 {
   <span style=color:#ff79c6>&#34;policy&#34;</span>: {
     <span style=color:#ff79c6>&#34;phases&#34;</span>: {

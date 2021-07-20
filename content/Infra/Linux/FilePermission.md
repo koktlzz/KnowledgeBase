@@ -8,7 +8,7 @@ images: []
 menu:
   infra:
     parent: "Linux"
-weight: 700
+weight: 800
 ---
 
 ## 默认权限

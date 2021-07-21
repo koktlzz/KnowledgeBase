@@ -12,13 +12,13 @@ weight: 1100
 通常，Kafka 中的每个 Partiotion 中有多个副本 (Replica) 用于实现高可用，使用相关命令可以查看某一 Topic 中的 Partition 数量、Leader、Follower 以及 ISR 的情况：
 
 ```bash
-[root@test-ece-kafka2 kafka]# ./bin/kafka-topics.sh --describe --zookeeper test-ece-zk1:2181 --topic uat-mos-core-mnp
-Topic:uat-mos-core-mnp  PartitionCount:5        ReplicationFactor:2     Configs:
-        Topic: uat-mos-core-mnp Partition: 0    Leader: 1       Replicas: 1,3   Isr: 3,1
-        Topic: uat-mos-core-mnp Partition: 1    Leader: 2       Replicas: 2,1   Isr: 2,1
-        Topic: uat-mos-core-mnp Partition: 2    Leader: 3       Replicas: 3,2   Isr: 2,3
-        Topic: uat-mos-core-mnp Partition: 3    Leader: 1       Replicas: 1,2   Isr: 2,1
-        Topic: uat-mos-core-mnp Partition: 4    Leader: 2       Replicas: 2,3   Isr: 2,3
+[root@test-ece-kafka2 kafka]# ./bin/kafka-topics.sh --describe --zookeeper test-zk1:2181 --topic uat-log
+Topic:uat-log  PartitionCount:5        ReplicationFactor:2     Configs:
+        Topic: uat-log Partition: 0    Leader: 1       Replicas: 1,3   Isr: 3,1
+        Topic: uat-log Partition: 1    Leader: 2       Replicas: 2,1   Isr: 2,1
+        Topic: uat-log Partition: 2    Leader: 3       Replicas: 3,2   Isr: 2,3
+        Topic: uat-log Partition: 3    Leader: 1       Replicas: 1,2   Isr: 2,1
+        Topic: uat-log Partition: 4    Leader: 2       Replicas: 2,3   Isr: 2,3
 ```
 
 想象一个场景，Consumer 正在消费 Leader 中 Offset=10 的数据，而此时 Follower 中只同步到 Offset=8。那么当 Leader 所在的 Broker 宕机后，当前 Follower 经选举成为新的 Leader，Consumer 再次消费时便会报错。因此，Kafka 引入了 High Watermark（高水位）来保证副本数据的可靠性和一致性。

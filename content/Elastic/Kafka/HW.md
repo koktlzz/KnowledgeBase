@@ -39,7 +39,7 @@ HW 定义了消息的可见性，即标识 Partition 中的哪些消息是可以
 
 如图所示，当 Producer 向 log 文件写入数据时，Leader LEO 首先被更新。而 Remote LEO 要等到 Follower 向 Leader 发送同步请求（Fetch）时，才会根据请求携带的当前 Follower LEO 值更新。随后，Leader 计算所有副本 LEO 的最小值，将其作为新的 Leader HW。考虑到 Leader HW 只能单调递增，因此还增加了一个 LEO 最小值与当前 Leader HW 的比较，防止 Leader HW 值降低（`max[Leader HW, min(All LEO)]`）。
 
-Follower 在接收到 Leader 的响应（Response）后，首先将消息写入。log 文件中，随后更新 Follower LEO。由于 Response 中携带了新的 Leader HW，Follower 将其与刚刚更新过的 Follower LEO 相比较，取最小值作为 Follower HW（`min(Follower LEO, Leader HW)`）。
+Follower 在接收到 Leader 的响应（Response）后，首先将消息写入 log 文件中，随后更新 Follower LEO。由于 Response 中携带了新的 Leader HW，Follower 将其与刚刚更新过的 Follower LEO 相比较，取最小值作为 Follower HW（`min(Follower LEO, Leader HW)`）。
 
 举例来说，如果一开始 Leader 和 Follower 中没有任何数据，即所有值均为 0。那么当 Prouder 向 Leader 写入第一条消息，上述几个值的变化顺序如下：
 

@@ -1,5 +1,5 @@
 ---
-title: "Get Started"
+title: "Getting Started"
 description: ""
 date: 2021-02-24T22:05:45+08:00
 lastmod: 2021-02-24T22:05:45+08:00

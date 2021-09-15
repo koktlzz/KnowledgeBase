@@ -23,6 +23,11 @@
   url = "/Infra/计算机网络基础/tcpip网络模型"
   weight = 50
 
+[[main]]
+  name = "Prometheus"
+  url = "/Prometheus/Prometheus/intro"
+  weight = 60
+
 [[docker]]
   name = "Docker 基础"
   weight = 10

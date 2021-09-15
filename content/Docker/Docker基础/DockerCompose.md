@@ -47,7 +47,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 ```
 
-## Get Started
+## Getting Started
 
 ### 官方文档
 

@@ -9,7 +9,7 @@ menu:
 weight: 100
 ---
 
-![20210915223256](https://cdn.jsdelivr.net/gh/koktlzz/ImgBed@master/20210915223256.png)
+![20210916100129](https://cdn.jsdelivr.net/gh/koktlzz/NoteImg@main/20210916100129.png)
 
 ## 官方网站
 
@@ -19,4 +19,4 @@ weight: 100
 
 [官方文档](https://prometheus.io/docs/introduction/overview/)
 
-[Thanos](https://thanos.io/)
+[Thanos - Highly available Prometheus setup with long term storage capabilities](https://thanos.io/)

@@ -9,7 +9,7 @@ menu:
 weight: 100
 ---
 
-![20210120102426](https://cdn.jsdelivr.net/gh/koktlzz/NoteImg@main/20210120102426.png)
+![508744930372483934](https://cdn.jsdelivr.net/gh/koktlzz/NoteImg@main/508744930372483934.jpg)
 
 ## 官方网站
 

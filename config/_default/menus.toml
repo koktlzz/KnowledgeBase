@@ -1,121 +1,76 @@
 [[main]]
-  name = "Docker"
-  url = "/Docker/Docker基础/intro"
+  name = "Container"
+  url = "/Container/Docker/intro"
   weight = 10
 
 [[main]]
-  name = "Kubernetes"
-  url = "/Kubernetes/Kubernetes基础/intro"
+  name = "Observability"
+  url = "/Observability/ElasticStack/intro"
   weight = 20
 
 [[main]]
-  name = "Elastic"
-  url = "/Elastic/ElasticStack/intro"
+  name = "Programming"
+  url = "/Programming/Go/intro"
   weight = 30
 
 [[main]]
-  name = "Go"
-  url = "/Go/Go基础/intro"
-  weight = 40
-
-[[main]]
-  name = "Infra"
-  url = "/Infra/计算机网络基础/tcpip网络模型"
+  name = "Infrastructure"
+  url = "/Infrastructure/计算机网络基础/tcpip网络模型"
   weight = 50
 
-[[main]]
-  name = "Prometheus"
-  url = "/Prometheus/Prometheus/intro"
-  weight = 60
-
-[[main]]
-  name = "Opentelemetry"
-  url = "/Opentelemetry/Opentelemetry/intro"
-  weight = 70
-
-[[docker]]
-  name = "Docker 基础"
+[[container]]
+  name = "Docker"
   weight = 10
-  identifier = "Docker 基础"
-  url = "/Docker/Docker基础"
+  identifier = "Docker"
+  url = "/Container/Docker"
 
-[[docker]]
-  name = "Docker 核心原理"
-  weight = 30
-  identifier = "Docker 核心原理"
-  url = "/Docker/Docker核心原理"
-
-[[kubernetes]]
-  name = "Kubernetes 基础"
-  weight = 10
-  identifier = "Kubernetes 基础"
-  url = "/Kubernetes/Kubernetes基础"
-
-[[kubernetes]]
-  name = "Kubernetes 进阶"
+[[container]]
+  name = "Kubernetes"
   weight = 20
-  identifier = "Kubernetes 进阶"
-  url = "/Kubernetes/Kubernetes进阶"
+  identifier = "Kubernetes"
+  url = "/Container/Kubernetes"
 
-[[elastic]]
+[[observability]]
   name = "ElasticStack"
   weight = 10
   identifier = "ElasticStack"
-  url = "/Elastic/ElasticStack"
+  url = "/Observability/ElasticStack"
 
-[[elastic]]
-  name = "Elasticsearch"
+[[observability]]
+  name = "Prometheus"
   weight = 20
-  identifier = "Elasticsearch"
-  url = "/Elastic/Elasticsearch"
+  identifier = "Prometheus"
+  url = "/Observability/Prometheus"
 
-[[elastic]]
-  name = "Kafka"
+[[observability]]
+  name = "Opentelemetry"
   weight = 30
-  identifier = "Kafka"
-  url = "/Elastic/Kafka"
+  identifier = "Opentelemetry"
+  url = "/Observability/Opentelemetry"
 
-[[go]]
-  name = "Go 基础"
+[[programming]]
+  name = "Go"
   weight = 10
-  identifier = "Go 基础"
-  url = "/Go/Go基础"
+  identifier = "Go"
+  url = "/Programming/Go"
 
-[[go]]
-  name = "Go Web"
-  weight = 20
-  identifier = "Go Web"
-  url = "/Go/GoWeb"
-
-[[infra]]
+[[infrastructure]]
   name = "计算机网络"
   weight = 10
-  identifier = "计算机网络基础"
-  url = "/Infra/计算机网络基础"
+  identifier = "计算机网络"
+  url = "/Infrastructure/计算机网络"
 
-[[infra]]
+[[infrastructure]]
   name = "CSAPP"
   weight = 20
   identifier = "CSAPP"
-  url = "/Infra/CSAPP"
+  url = "/Infrastructure/CSAPP"
 
-[[infra]]
+[[infrastructure]]
   name = "Linux"
   weight = 30
   identifier = "Linux"
-  url = "/Infra/Linux"
-
-[[prometheus]]
-  name = "prometheus"
-  weight = 10
-  identifier = "prometheus"
-  url = "/Infra/Prometheus"
-
-[[opentelemetry]]
-  name = "opentelemetry"
-  weight = 10
-  identifier = "opentelemetry"
-  url = "/Infra/Opentelemetry"
+  url = "/Infrastructure/Linux"
 
 [[social]]
   name = "GitHub"

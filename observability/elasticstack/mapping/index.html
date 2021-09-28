@@ -1,0 +1,279 @@
+<!doctype html><html lang=en-us><head><script async src="https://www.googletagmanager.com/gtag/js?id=G-D022F6NT2P"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-D022F6NT2P')</script><script>(function(b,d,e,a,g){b[a]=b[a]||[],b[a].push({'gtm.start':(new Date).getTime(),event:'gtm.js'});var f=d.getElementsByTagName(e)[0],c=d.createElement(e),h=a!='dataLayer'?'&l='+a:'';c.async=!0,c.src='https://www.googletagmanager.com/gtm.js?id='+g+h,f.parentNode.insertBefore(c,f)})(window,document,'script','dataLayer','GTM-P72R45W')</script><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><link rel=preload as=font href=https://koktlzz.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://koktlzz.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://koktlzz.github.io/fonts/KaTeX_Main-Regular.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://koktlzz.github.io/fonts/KaTeX_Math-Italic.woff2 type=font/woff2 crossorigin><link rel=stylesheet href=https://koktlzz.github.io/main.0ae7165cfeda76c765ab05aa408a696be65779f1e277afd078efecc543cc00bb72be873f087e148ccf7ac1016b22c2d2586f058c7ee5d92dcca60206eae2dd99.css integrity="sha512-CucWXP7adsdlqwWqQIppa+ZXefHid6/QeO/sxUPMALtyvoc/CH4UjM96wQFrIsLSWG8FjH7l2S3MpgIG6uLdmQ==" crossorigin=anonymous><noscript><style>img.lazyload{display:none}</style></noscript><meta name=robots content="index, follow"><meta name=googlebot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><meta name=bingbot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><title>Mapping | Inspire Hub</title><meta name=description content><link rel=canonical href=https://koktlzz.github.io/observability/elasticstack/mapping/><meta property="og:locale" content="en_US"><meta property="og:type" content="article"><meta property="og:title" content="Mapping"><meta property="og:description" content="概述  Mapping 定义了文档（document）及其包含的字段（filed）在存储和被索引时的过程和方式。 每个文档都是一组字段的集合，而每个字段也有自己的数据类型。Mapping 中不仅包含了与文档相关的字段列表，还包括元数据字段（例如_source），因此可以自定义文档相关元数据的处理方式。 Mapping 有 Dynamic（动态生成）和 Explicit（显式指定）两种实现方式，可根据字段的特点配合使用。  Dynamic Mapping 我们只需创建一条文档并指定其所在索引，Dynamic Mapping 便会为我们自动生成索引、字段以及字段类型。
+PUT /my_index/_doc/first_doc { &#34;num&#34;: 5, &#34;text&#34;: &#34;5&#34; } 查看该索引的 Mapping，我们发现字段值为数字的num字段的类型自动映射为 long 类型。而text字段映射为了 text 类型，其子字段text.keyword类型则为 keyword，可用于排序和聚合等操作（详见：multi-fields）。
+GET /my_index/_mapping // 返回 { &#34;my_index&#34; : { &#34;mappings&#34; : { &#34;properties&#34; : { &#34;num&#34; : { &#34;type&#34; : &#34;long&#34; }, &#34;text&#34; : { &#34;type&#34; : &#34;text&#34;, &#34;fields&#34; : { &#34;keyword&#34; : { &#34;type&#34; : &#34;keyword&#34;, &#34;ignore_above&#34; : 256 } } } } } } } 但大多数情况下，我们可能希望值为&#34;123&#34;和&#34;2021/02/26&#34;这样的字段能够分别映射为 long 和 date 类型，这时便需要对 Dynamic Mapping 的方式进行自定义。"><meta property="og:url" content="https://koktlzz.github.io/observability/elasticstack/mapping/"><meta property="og:site_name" content="Inspire Hub"><meta property="article:published_time" content="2020-11-04T09:19:42+01:00"><meta property="article:modified_time" content="2020-11-04T09:19:42+01:00"><meta property="og:image" content="https://koktlzz.github.io/doks.png"><meta property="og:image:alt" content="Inspire Hub"><meta name=twitter:card content="summary_large_image"><meta name=twitter:site content="@getdoks"><meta name=twitter:creator content="@henkverlinde"><meta name=twitter:title content="Mapping"><meta name=twitter:description content><meta name=twitter:image content="https://koktlzz.github.io/doks.png"><meta name=twitter:image:alt content="Mapping"><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://koktlzz.github.io/#/schema/organization/1","name":"Doks","url":"https://koktlzz.github.io/","sameAs":["https://twitter.com/getdoks","https://github.com/h-enk/doks"],"logo":{"@type":"ImageObject","@id":"https://koktlzz.github.io/#/schema/image/1","url":"https://koktlzz.github.io/logo-doks.png","width":512,"height":512,"caption":"Doks"},"image":{"@id":"https://koktlzz.github.io/#/schema/image/1"}},{"@type":"WebSite","@id":"https://koktlzz.github.io/#/schema/website/1","url":"https://koktlzz.github.io/","name":"Inspire Hub","description":"","publisher":{"@id":"https://koktlzz.github.io/#/schema/organization/1"}},{"@type":"WebPage","@id":"https://koktlzz.github.io/observability/elasticstack/mapping/","url":"https://koktlzz.github.io/observability/elasticstack/mapping/","name":"Mapping","description":"","isPartOf":{"@id":"https://koktlzz.github.io/#/schema/website/1"},"about":{"@id":"https://koktlzz.github.io/#/schema/organization/1"},"datePublished":"2020-11-04T09:19:42CET","dateModified":"2020-11-04T09:19:42CET","breadcrumb":{"@id":"https://koktlzz.github.io/observability/elasticstack/mapping/#/schema/breadcrumb/1"},"primaryImageOfPage":{"@id":"https://koktlzz.github.io/observability/elasticstack/mapping/#/schema/image/2"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://koktlzz.github.io/observability/elasticstack/mapping/"]}]},{"@type":"BreadcrumbList","@id":"https://koktlzz.github.io/observability/elasticstack/mapping/#/schema/breadcrumb/1","name":"Breadcrumbs","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"WebPage","@id":"https://koktlzz.github.io/","url":"https://koktlzz.github.io/","name":"Home"}},{"@type":"ListItem","position":2,"item":{"@type":"WebPage","@id":"https://koktlzz.github.io/observability/","url":"https://koktlzz.github.io/observability/","name":"Observability"}},{"@type":"ListItem","position":3,"item":{"@type":"WebPage","@id":"https://koktlzz.github.io/observability/elasticstack/","url":"https://koktlzz.github.io/observability/elasticstack/","name":"Elasticstack"}},{"@type":"ListItem","position":4,"item":{"@id":"https://koktlzz.github.io/observability/elasticstack/mapping/"}}]},{"@context":"https://schema.org","@graph":[{"@type":"ImageObject","@id":"https://koktlzz.github.io/observability/elasticstack/mapping/#/schema/image/2","url":"https://koktlzz.github.io/doks.png","contentUrl":"https://koktlzz.github.io/doks.png","caption":"Mapping"}]}]}</script><meta name=theme-color content="#fff"><link rel=apple-touch-icon sizes=180x180 href=https://koktlzz.github.io/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://koktlzz.github.io/favicon-32x32.ico><link rel=icon type=image/png sizes=16x16 href=https://koktlzz.github.io/favicon-16x16.ico><link rel=manifest crossorigin=use-credentials href=https://koktlzz.github.io/site.webmanifest></head><body class="Observability single dark"><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P72R45W" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container-fluid><input class="menu-btn order-0" type=checkbox id=menu-btn>
+<label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://koktlzz.github.io/>Inspire Hub</a>
+<button id=mode class="btn btn-link order-2 order-md-4" type=button aria-label="Toggle mode">
+<span class=toggle-dark><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></span><span class=toggle-light><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span></button><ul class="navbar-nav social-nav order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/koktlzz><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg><span class="ms-2 visually-hidden">GitHub</span></a></li></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://koktlzz.github.io/container/docker/intro>Container</a></li><li class=nav-item><a class=nav-link href=https://koktlzz.github.io/observability/elasticstack/intro>Observability</a></li><li class=nav-item><a class=nav-link href=https://koktlzz.github.io/programming/go/intro>Programming</a></li><li class=nav-item><a class=nav-link href=https://koktlzz.github.io/infrastructure/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/tcpip%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B>Infrastructure</a></li></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container-fluid" role=document><div class=content><div class="row flex-xl-nowrap"><div class="col-lg-3 col-xl-2 d-none d-xl-block"><nav class=docs-links aria-label="Main navigation"><h3>ElasticStack</h3><ul class=list-unstyled><li><a class=docs-link href=https://koktlzz.github.io/observability/elasticstack/intro/>Getting Started</a></li><li><a class=docs-link href=https://koktlzz.github.io/observability/elasticstack/%E5%8D%95%E8%8A%82%E7%82%B9%E9%83%A8%E7%BD%B2%E6%B5%81%E7%A8%8B/>单节点部署流程</a></li><li><a class=docs-link href=https://koktlzz.github.io/observability/elasticstack/elasticsearchintro/>ElasticSearch 简介</a></li><li><a class=docs-link href=https://koktlzz.github.io/observability/elasticstack/mapping/>Mapping</a></li><li><a class=docs-link href=https://koktlzz.github.io/observability/elasticstack/textanalysis/>Text analysis</a></li><li><a class=docs-link href=https://koktlzz.github.io/observability/elasticstack/template/>Template</a></li><li><a class=docs-link href=https://koktlzz.github.io/observability/elasticstack/ilm/>ILM</a></li><li><a class=docs-link href=https://koktlzz.github.io/observability/elasticstack/snapshot/>Snapshot</a></li><li><a class=docs-link href=https://koktlzz.github.io/observability/elasticstack/%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/>ES 性能调优</a></li><li><a class=docs-link href=https://koktlzz.github.io/observability/elasticstack/kafkaintro/>Kafka 简介</a></li><li><a class=docs-link href=https://koktlzz.github.io/observability/elasticstack/hw/>Kafka 副本备份</a></li><li><a class=docs-link href=https://koktlzz.github.io/observability/elasticstack/transaction/>Kafka 事务</a></li></ul><h3>Prometheus</h3><ul class=list-unstyled><li><a class=docs-link href=https://koktlzz.github.io/observability/prometheus/intro/>Getting Started</a></li><li><a class=docs-link href=https://koktlzz.github.io/observability/prometheus/operator%E8%87%AA%E5%AE%9A%E4%B9%89%E9%85%8D%E7%BD%AE/>Operator 自定义配置</a></li></ul><h3>Opentelemetry</h3><ul class=list-unstyled><li><a class=docs-link href=https://koktlzz.github.io/observability/opentelemetry/intro/>Getting Started</a></li><li><a class=docs-link href=https://koktlzz.github.io/observability/opentelemetry/opentelemetry/>Collector Example</a></li></ul></nav></div><main class="docs-content col-lg-13 col-xl-11"><h1>Mapping</h1><p class=lead></p><h2 id=概述>概述<a href=#概述 class=anchor aria-hidden=true>#</a></h2><ul><li>Mapping 定义了文档（document）及其包含的字段（filed）在存储和被索引时的过程和方式。</li><li>每个文档都是一组字段的集合，而每个字段也有自己的数据类型。Mapping 中不仅包含了与文档相关的字段列表，还包括元数据字段（例如_source），因此可以自定义文档相关元数据的处理方式。</li><li>Mapping 有 Dynamic（动态生成）和 Explicit（显式指定）两种实现方式，可根据字段的特点配合使用。</li></ul><h2 id=dynamic-mapping>Dynamic Mapping<a href=#dynamic-mapping class=anchor aria-hidden=true>#</a></h2><p>我们只需创建一条文档并指定其所在索引，Dynamic Mapping 便会为我们自动生成索引、字段以及字段类型。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>PUT /my_index/_doc/first_doc
+{
+  <span style=color:#ff79c6>&#34;num&#34;</span>: <span style=color:#bd93f9>5</span>, 
+  <span style=color:#ff79c6>&#34;text&#34;</span>: <span style=color:#f1fa8c>&#34;5&#34;</span>
+}
+</code></pre></div><p>查看该索引的 Mapping，我们发现字段值为数字的<code>num</code>字段的类型自动映射为 long 类型。而<code>text</code>字段映射为了 text 类型，其子字段<code>text.keyword</code>类型则为 keyword，可用于排序和聚合等操作（详见：<a href=https://www.elastic.co/guide/en/elasticsearch/reference/current/multi-fields.html>multi-fields</a>）。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>GET /my_index/_mapping
+
+// 返回
+{
+  <span style=color:#ff79c6>&#34;my_index&#34;</span> : {
+    <span style=color:#ff79c6>&#34;mappings&#34;</span> : {
+      <span style=color:#ff79c6>&#34;properties&#34;</span> : {
+        <span style=color:#ff79c6>&#34;num&#34;</span> : {
+          <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;long&#34;</span>
+        },
+        <span style=color:#ff79c6>&#34;text&#34;</span> : {
+          <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;text&#34;</span>,
+          <span style=color:#ff79c6>&#34;fields&#34;</span> : {
+            <span style=color:#ff79c6>&#34;keyword&#34;</span> : {
+              <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;keyword&#34;</span>,
+              <span style=color:#ff79c6>&#34;ignore_above&#34;</span> : <span style=color:#bd93f9>256</span>
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</code></pre></div><p>但大多数情况下，我们可能希望值为"123"和"2021/02/26"这样的字段能够分别映射为 long 和 date 类型，这时便需要对 Dynamic Mapping 的方式进行自定义。</p><h3 id=dynamic-field-mappings>Dynamic field mappings<a href=#dynamic-field-mappings class=anchor aria-hidden=true>#</a></h3><p>当我们将<code>mappings.dynamic</code>属性设置为<code>true</code>或<code>runtime</code>后，便可以增加 Dynamic Mapping 的映射规则。值得一提的是，<code>runtime</code>这种 Mapping 方式仍处于 beta 测试中。</p><table><thead><tr><th>Json 数据类型</th><th><code>mappings.dynamic: true</code></th><th><code>mappings.dynamic: runtime</code></th></tr></thead><tbody><tr><td>null</td><td>不添加该字段</td><td>不添加该字段</td></tr><tr><td>true or false</td><td>bool</td><td>bool</td></tr><tr><td>double</td><td>float</td><td>double</td></tr><tr><td>integer</td><td>long</td><td>long</td></tr><tr><td>object</td><td>object</td><td>object</td></tr><tr><td>array</td><td>由数组第一个非空值的类型决定</td><td>由数组第一个非空值的类型决定</td></tr><tr><td>检测为日期的 string</td><td>date</td><td>date</td></tr><tr><td>检测为数字的 string</td><td>float or long</td><td>double or long</td></tr><tr><td>其他 string</td><td>带有 keyword 子字段的 text</td><td>keyword</td></tr></tbody></table><p>对于数据类型为 object 的字段，在两种规则下都会将其包含的多个字段映射在<code>mappings.properties.&lt;object-filed>.properties</code>中。我们以<code>mappings.dynamic: true</code>为例，检验 Dynamic Mapping 的处理方式。由于数字检测是默认关闭的（日期检测默认开启），因此还要先对索引的 Mapping 进行相关设置：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>PUT /my_index/
+{
+  <span style=color:#ff79c6>&#34;mappings&#34;</span>: {
+    <span style=color:#ff79c6>&#34;dynamic&#34;</span>: <span style=color:#ff79c6>true</span>,
+    <span style=color:#ff79c6>&#34;numeric_detection&#34;</span>: <span style=color:#ff79c6>true</span>
+  }
+}
+</code></pre></div><p>然后在不指定 Mapping 的情况下向索引中加入一个文档：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>PUT /my_index/_doc/<span style=color:#bd93f9>1</span>
+{
+  <span style=color:#ff79c6>&#34;one&#34;</span>: <span style=color:#ff79c6>null</span>,
+  <span style=color:#ff79c6>&#34;two&#34;</span>: <span style=color:#ff79c6>true</span>,
+  <span style=color:#ff79c6>&#34;three&#34;</span>: <span style=color:#bd93f9>1.11111111111111111111</span>,
+  <span style=color:#ff79c6>&#34;four&#34;</span>: <span style=color:#bd93f9>1</span>,
+  <span style=color:#ff79c6>&#34;five&#34;</span>: {
+    <span style=color:#ff79c6>&#34;one&#34;</span>: <span style=color:#f1fa8c>&#34;3&#34;</span>,
+    <span style=color:#ff79c6>&#34;two&#34;</span> : <span style=color:#f1fa8c>&#34;true&#34;</span>
+  },
+  <span style=color:#ff79c6>&#34;six&#34;</span>: <span style=color:#f1fa8c>&#34;2021/02/26&#34;</span>,
+  <span style=color:#ff79c6>&#34;seven&#34;</span>: <span style=color:#f1fa8c>&#34;1&#34;</span>,
+  <span style=color:#ff79c6>&#34;eight&#34;</span> : <span style=color:#f1fa8c>&#34;koktlzz&#34;</span>
+}
+</code></pre></div><p>随后即可查看该索引中各字段的类型：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>GET /my_index/_mapping
+
+// 返回
+{
+  <span style=color:#ff79c6>&#34;my_index&#34;</span> : {
+    <span style=color:#ff79c6>&#34;mappings&#34;</span> : {
+      <span style=color:#ff79c6>&#34;dynamic&#34;</span> : <span style=color:#f1fa8c>&#34;true&#34;</span>,
+      <span style=color:#ff79c6>&#34;numeric_detection&#34;</span> : <span style=color:#ff79c6>true</span>,
+      <span style=color:#ff79c6>&#34;properties&#34;</span> : {
+        <span style=color:#ff79c6>&#34;eight&#34;</span> : {
+          <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;text&#34;</span>,
+          <span style=color:#ff79c6>&#34;fields&#34;</span> : {
+            <span style=color:#ff79c6>&#34;keyword&#34;</span> : {
+              <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;keyword&#34;</span>,
+              <span style=color:#ff79c6>&#34;ignore_above&#34;</span> : <span style=color:#bd93f9>256</span>
+            }
+          }
+        },
+        <span style=color:#ff79c6>&#34;five&#34;</span> : {
+          <span style=color:#ff79c6>&#34;properties&#34;</span> : {
+            <span style=color:#ff79c6>&#34;one&#34;</span> : {
+              <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;long&#34;</span>
+            },
+            <span style=color:#ff79c6>&#34;two&#34;</span> : {
+              <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;text&#34;</span>,
+              <span style=color:#ff79c6>&#34;fields&#34;</span> : {
+                <span style=color:#ff79c6>&#34;keyword&#34;</span> : {
+                  <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;keyword&#34;</span>,
+                  <span style=color:#ff79c6>&#34;ignore_above&#34;</span> : <span style=color:#bd93f9>256</span>
+                }
+              }
+            }
+          }
+        },
+        <span style=color:#ff79c6>&#34;four&#34;</span> : {
+          <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;long&#34;</span>
+        },
+        <span style=color:#ff79c6>&#34;seven&#34;</span> : {
+          <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;long&#34;</span>
+        },
+        <span style=color:#ff79c6>&#34;six&#34;</span> : {
+          <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;date&#34;</span>,
+          <span style=color:#ff79c6>&#34;format&#34;</span> : <span style=color:#f1fa8c>&#34;yyyy/MM/dd HH:mm:ss||yyyy/MM/dd||epoch_millis&#34;</span>
+        },
+        <span style=color:#ff79c6>&#34;three&#34;</span> : {
+          <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;float&#34;</span>
+        },
+        <span style=color:#ff79c6>&#34;two&#34;</span> : {
+          <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;boolean&#34;</span>
+        }
+      }
+    }
+  }
+}
+</code></pre></div><h3 id=dynamic-template>Dynamic template<a href=#dynamic-template class=anchor aria-hidden=true>#</a></h3><p>我们还可以通过动态模板（Dynamic template）进一步地自定义索引字段的 Mapping 方式，而模板与字段的匹配规则有以下三种：</p><ul><li><code>match_mapping_type</code>：匹配字段的数据类型；</li><li><code>match</code>和<code>unmatch</code>：匹配字段的名称；</li><li><code>path_match</code>和<code>path_unmatch</code>：匹配字段的全路径（如<code>&lt;object>.*.&lt;filed></code>）。</li></ul><p>一个典型的 Dynamic template 的基本配置如下：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>  <span style=color:#f1fa8c>&#34;dynamic_templates&#34;</span>: [
+    {
+      <span style=color:#ff79c6>&#34;dynamic_template_name&#34;</span>: { 
+        ...  match conditions ... // 使用上述三种规则匹配相关字段
+        <span style=color:#ff79c6>&#34;mapping&#34;</span>: { ... }        // 指定匹配字段的 Mapping 方式
+      }
+    },
+    ...
+  ]
+</code></pre></div><p>我们使用一个复杂的模板为例，展示 Dynamic template 对字段的映射方式：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>PUT my_index
+{
+  <span style=color:#ff79c6>&#34;mappings&#34;</span>: {
+    <span style=color:#ff79c6>&#34;dynamic_templates&#34;</span>: [{
+      <span style=color:#ff79c6>&#34;longs_as_strings&#34;</span>: {
+        <span style=color:#ff79c6>&#34;match_mapping_type&#34;</span>: <span style=color:#f1fa8c>&#34;string&#34;</span>,
+        <span style=color:#ff79c6>&#34;match&#34;</span>: <span style=color:#f1fa8c>&#34;long_*&#34;</span>,
+        <span style=color:#ff79c6>&#34;unmatch&#34;</span>: <span style=color:#f1fa8c>&#34;*_text&#34;</span>,
+        <span style=color:#ff79c6>&#34;mapping&#34;</span>: {
+          <span style=color:#ff79c6>&#34;type&#34;</span>: <span style=color:#f1fa8c>&#34;long&#34;</span>
+          }
+        }
+      }, {
+      <span style=color:#ff79c6>&#34;full_name&#34;</span>: {
+        <span style=color:#ff79c6>&#34;path_match&#34;</span>: <span style=color:#f1fa8c>&#34;name.*&#34;</span>,
+        <span style=color:#ff79c6>&#34;path_unmatch&#34;</span>: <span style=color:#f1fa8c>&#34;*.middle&#34;</span>,
+        <span style=color:#ff79c6>&#34;mapping&#34;</span>: {
+          <span style=color:#ff79c6>&#34;type&#34;</span>: <span style=color:#f1fa8c>&#34;text&#34;</span>
+        }
+      }
+    }]
+  }
+}
+</code></pre></div><p>该模板规定了两种匹配规则：名称以"long"开头、不以"text"结尾且类型为 string 的字段将会被映射为 long 类型；<code>name</code>对象中除<code>middle</code>外的字段将会被映射为 text 类型：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>PUT my_index/_doc/<span style=color:#bd93f9>1</span>
+{
+  <span style=color:#ff79c6>&#34;long_num&#34;</span>: <span style=color:#f1fa8c>&#34;5&#34;</span>, 
+  <span style=color:#ff79c6>&#34;long_text&#34;</span>: <span style=color:#f1fa8c>&#34;foo&#34;</span>,
+  <span style=color:#ff79c6>&#34;name&#34;</span>: {
+    <span style=color:#ff79c6>&#34;first&#34;</span>:  <span style=color:#f1fa8c>&#34;John&#34;</span>,
+    <span style=color:#ff79c6>&#34;middle&#34;</span>: <span style=color:#f1fa8c>&#34;Winston&#34;</span>
+  }
+}
+
+GET /my_index/_mapping
+// 返回
+{
+  ...
+  <span style=color:#ff79c6>&#34;properties&#34;</span> : {
+    <span style=color:#ff79c6>&#34;long_num&#34;</span> : {
+      <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;long&#34;</span>
+    },
+    <span style=color:#ff79c6>&#34;long_text&#34;</span> : {
+      <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;text&#34;</span>,
+      <span style=color:#ff79c6>&#34;fields&#34;</span> : {
+        <span style=color:#ff79c6>&#34;keyword&#34;</span> : {
+          <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;keyword&#34;</span>,
+          <span style=color:#ff79c6>&#34;ignore_above&#34;</span> : <span style=color:#bd93f9>256</span>
+        }
+      }
+    },
+    <span style=color:#ff79c6>&#34;name&#34;</span> : {
+      <span style=color:#ff79c6>&#34;properties&#34;</span> : {
+        <span style=color:#ff79c6>&#34;first&#34;</span> : {
+          <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;text&#34;</span>
+        },
+        <span style=color:#ff79c6>&#34;middle&#34;</span> : {
+          <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;text&#34;</span>,
+          <span style=color:#ff79c6>&#34;fields&#34;</span> : {
+            <span style=color:#ff79c6>&#34;keyword&#34;</span> : {
+              <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;keyword&#34;</span>,
+              <span style=color:#ff79c6>&#34;ignore_above&#34;</span> : <span style=color:#bd93f9>256</span>
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</code></pre></div><h2 id=explicit-mapping>Explicit Mapping<a href=#explicit-mapping class=anchor aria-hidden=true>#</a></h2><p>除了让 Elasticsearch 为我们动态生成 Mapping 外，我们当然也可以显式地指定索引中各字段的 Mapping 方式，如：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>PUT /my_index
+{
+  <span style=color:#ff79c6>&#34;mappings&#34;</span>: {
+    <span style=color:#ff79c6>&#34;properties&#34;</span>: {
+      <span style=color:#ff79c6>&#34;age&#34;</span>:    { <span style=color:#ff79c6>&#34;type&#34;</span>: <span style=color:#f1fa8c>&#34;integer&#34;</span> },  
+      <span style=color:#ff79c6>&#34;email&#34;</span>:  { <span style=color:#ff79c6>&#34;type&#34;</span>: <span style=color:#f1fa8c>&#34;keyword&#34;</span>  }, 
+      <span style=color:#ff79c6>&#34;name&#34;</span>:   { <span style=color:#ff79c6>&#34;type&#34;</span>: <span style=color:#f1fa8c>&#34;text&#34;</span>  }     
+    }
+  }
+}
+</code></pre></div><p>对于一个已定义 Mapping 的索引，我们无法更新其中已存在的字段 Mapping 方式，但是可以增加字段。相比于创建，PUT 请求的 URL 多了一个"/_mapping"：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>PUT /my_index/_mapping
+{
+  <span style=color:#ff79c6>&#34;properties&#34;</span>: {
+    <span style=color:#ff79c6>&#34;employee-id&#34;</span>: {
+      <span style=color:#ff79c6>&#34;type&#34;</span>: <span style=color:#f1fa8c>&#34;keyword&#34;</span>
+    }
+  }
+}
+</code></pre></div><p>之前我们使用了 <strong>GET /my_index/_mapping</strong> 的方式查看索引中的 Mapping。而如果只想了解其中几个特定字段的 Mapping，可以这样做：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>GET /my_index/_mapping/field/employee-id
+
+// 返回
+{
+  <span style=color:#ff79c6>&#34;my_index&#34;</span> : {
+    <span style=color:#ff79c6>&#34;mappings&#34;</span> : {
+      <span style=color:#ff79c6>&#34;employee-id&#34;</span> : {
+        <span style=color:#ff79c6>&#34;full_name&#34;</span> : <span style=color:#f1fa8c>&#34;employee-id&#34;</span>,
+        <span style=color:#ff79c6>&#34;mapping&#34;</span> : {
+          <span style=color:#ff79c6>&#34;employee-id&#34;</span> : {
+            <span style=color:#ff79c6>&#34;type&#34;</span> : <span style=color:#f1fa8c>&#34;keyword&#34;</span>
+          }
+        }
+      }
+    }
+  }
+}
+</code></pre></div><p>除了上述的基本数据类型外，Elasticsearch 还支持多种数据类型，详见 <a href=https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html>官方文档</a>。而除了通常用来存储数据的字段外，每个文档还包含一些 <a href=https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-fields.html>元数据字段</a>，如<code>_source</code>字段保存了文档内容的原始 JSON 文件。</p><h2 id=mapping-parameters>Mapping parameters<a href=#mapping-parameters class=anchor aria-hidden=true>#</a></h2><p>在字段的 Mapping 规则中，我们可以添加一些参数从而让字段的搜索结果更加符合我们的预期。详见 <a href=https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-params.html#mapping-params>官方文档</a>，此处介绍几个相对重要的 Mapping 参数：</p><ul><li>index：默认为 true，代表是否对该字段进行 <a href=https://koktlzz.github.io/elastic/elasticsearch/textanalysis/>Text Analysis</a>。若设置为 false，则会减少磁盘占用，不过该字段只能通过完全匹配搜索；</li><li>enable：默认为 true，代表该字段是否被索引。若设置为 false，则完全不会被搜索到且不会影响文档的评分，只能在<code>_source</code>中找到该字段；</li><li>norms：默认为 true，代表该字段是否参与评分。若设置为 false，则可以减少磁盘占用；</li><li>doc_value：默认为 true。若设置为 false，则无法对该字段进行排序、聚合和脚本访问等操作；</li><li>store：默认为 false，代表数据的存储方式，可以将经常被搜索且较小字段的 store 参数设置为 true 来单独存储。相比从<code>_source</code>中搜索，这样设置可以减少 IO 操作，从而提高效率；</li></ul><h3 id=fielddata>fielddata<a href=#fielddata class=anchor aria-hidden=true>#</a></h3><p>默认情况下 text 类型的字段是可搜索的，但是如果用于聚合、排序以及脚本访问，Elasticsearch 将会返回：</p><blockquote><p>&ldquo;reason&rdquo;: &ldquo;Fielddata is disabled on text fields by default. Set fielddata=true on [address] in order to load fielddata in memory by uninverting the inverted index. Note that this can however use significant memory. Alternatively use a keyword field instead.&rdquo;</p></blockquote><p>与常用的搜索操作不同，排序和聚合需要在文档的字段中找到指定的值。这些操作与 Elasticsearch 倒排索引的逻辑（根据字段值查找文档）恰好相反，因此必须在内存中加载相关的数据结构。实现 text 类型字段的聚合操作，需要在字段设置中开启<code>fielddata: true</code>，这将占用大量堆内存。</p><p>text 类型的字段开启 fileddata 后聚合的结果，与通过 multi-fields 进行聚合有所不同，区别在于是否进行分词上。</p><p>fielddata：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>GET myindex/_search
+{
+  <span style=color:#ff79c6>&#34;size&#34;</span>: <span style=color:#bd93f9>0</span>,
+  <span style=color:#ff79c6>&#34;aggs&#34;</span>: {
+    <span style=color:#ff79c6>&#34;aggr_mame&#34;</span>: {
+      <span style=color:#ff79c6>&#34;terms&#34;</span>: {
+        <span style=color:#ff79c6>&#34;field&#34;</span>: <span style=color:#f1fa8c>&#34;address&#34;</span>,
+        <span style=color:#ff79c6>&#34;size&#34;</span>: <span style=color:#bd93f9>5</span>
+      }
+    }
+  }
+}
+
+// 返回
+...
+<span style=color:#f1fa8c>&#34;aggregations&#34;</span> : {
+  <span style=color:#ff79c6>&#34;aggr_mame&#34;</span> : {
+    <span style=color:#ff79c6>&#34;doc_count_error_upper_bound&#34;</span> : <span style=color:#bd93f9>0</span>,
+    <span style=color:#ff79c6>&#34;sum_other_doc_count&#34;</span> : <span style=color:#bd93f9>0</span>,
+    <span style=color:#ff79c6>&#34;buckets&#34;</span> : [
+      {
+        <span style=color:#ff79c6>&#34;key&#34;</span> : <span style=color:#f1fa8c>&#34;new&#34;</span>,
+        <span style=color:#ff79c6>&#34;doc_count&#34;</span> : <span style=color:#bd93f9>1</span>
+      },
+      {
+        <span style=color:#ff79c6>&#34;key&#34;</span> : <span style=color:#f1fa8c>&#34;york&#34;</span>,
+        <span style=color:#ff79c6>&#34;doc_count&#34;</span> : <span style=color:#bd93f9>1</span>
+      }
+    ]
+  }
+}
+</code></pre></div><p>multi-fields：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>GET myindex/_search
+{
+  <span style=color:#ff79c6>&#34;size&#34;</span>: <span style=color:#bd93f9>0</span>,
+  <span style=color:#ff79c6>&#34;aggs&#34;</span>: {
+    <span style=color:#ff79c6>&#34;aggr_mame&#34;</span>: {
+      <span style=color:#ff79c6>&#34;terms&#34;</span>: {
+        <span style=color:#ff79c6>&#34;field&#34;</span>: <span style=color:#f1fa8c>&#34;address.keyword&#34;</span>,
+        <span style=color:#ff79c6>&#34;size&#34;</span>: <span style=color:#bd93f9>5</span>
+      }
+    }
+  }
+}
+
+// 返回
+...
+<span style=color:#f1fa8c>&#34;aggregations&#34;</span> : {
+    <span style=color:#ff79c6>&#34;aggr_mame&#34;</span> : {
+      <span style=color:#ff79c6>&#34;doc_count_error_upper_bound&#34;</span> : <span style=color:#bd93f9>0</span>,
+      <span style=color:#ff79c6>&#34;sum_other_doc_count&#34;</span> : <span style=color:#bd93f9>0</span>,
+      <span style=color:#ff79c6>&#34;buckets&#34;</span> : [
+        {
+          <span style=color:#ff79c6>&#34;key&#34;</span> : <span style=color:#f1fa8c>&#34;New York&#34;</span>,
+          <span style=color:#ff79c6>&#34;doc_count&#34;</span> : <span style=color:#bd93f9>1</span>
+        }
+      ]
+    }
+  }
+</code></pre></div><p class=edit-page><a href=https://github.com/koktlzz/koktlzz.github.io/blob/master/content/Observability/ElasticStack/Mapping.md><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><path d="M17 3a2.828 2.828.0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>Edit this page on GitHub</a></p><div class="docs-navigation d-flex justify-content-between"><a href=https://koktlzz.github.io/observability/elasticstack/elasticsearchintro/><div class="card my-1"><div class="card-body py-2">&larr; ElasticSearch 简介</div></div></a><a class=ms-auto href=https://koktlzz.github.io/observability/elasticstack/textanalysis/><div class="card my-1"><div class="card-body py-2">Text analysis &rarr;</div></div></a></div><script src=https://utteranc.es/client.js repo=koktlzz/koktlzz.github.io issue-term=pathname theme=photon-dark crossorigin=anonymous async></script></main><nav class="docs-toc d-none d-xl-block col-lg-3 col-xl-2" aria-label="Secondary navigation"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=#概述>概述</a></li><li><a href=#dynamic-mapping>Dynamic Mapping</a><ul><li><a href=#dynamic-field-mappings>Dynamic field mappings</a></li><li><a href=#dynamic-template>Dynamic template</a></li></ul></li><li><a href=#explicit-mapping>Explicit Mapping</a></li><li><a href=#mapping-parameters>Mapping parameters</a><ul><li><a href=#fielddata>fielddata</a></li></ul></li></ul></nav></div></nav></div></div></div><footer class="footer text-muted"><div class=container><div class=row><div class="col-lg-8 order-last order-lg-first"><ul class=list-inline><li class=list-inline-item></li></ul></div><div class="col-lg-8 order-first order-lg-last text-lg-end"><ul class=list-inline></ul></div></div></div></footer><script src=https://koktlzz.github.io/js/bootstrap.min.d67050adf5d370668aede4201f82af781b16970934804995a1ca37c1ee9222c2fc530972aa6d5d2b6124caf1fe318f139aac99df2c1e89af65504fc1185c7972.js integrity="sha512-1nBQrfXTcGaK7eQgH4KveBsWlwk0gEmVoco3we6SIsL8Uwlyqm1dK2EkyvH+MY8TmqyZ3yweia9lUE/BGFx5cg==" crossorigin=anonymous defer></script><script src=https://koktlzz.github.io/js/vendor/katex/dist/katex.min.b334e5b00c45f572e7f38a543046f36854bf4cbb543880480c09271a0efedc694d6905f719934f6ede2f26f52e80411c05b90121d722cbf8be2fa8fc51bc6b81.js integrity="sha512-szTlsAxF9XLn84pUMEbzaFS/TLtUOIBIDAknGg7+3GlNaQX3GZNPbt4vJvUugEEcBbkBIdciy/i+L6j8UbxrgQ==" crossorigin=anonymous defer></script><script src=https://koktlzz.github.io/js/vendor/katex/dist/contrib/auto-render.min.916823ec103cf367b71e28a6f01513cb9c3ac6708ccb5229402ec46b8e30a8b25003db694df35d80e9dd666a371f327c6152790617b6256390c164109a90bd4c.js integrity="sha512-kWgj7BA882e3Hiim8BUTy5w6xnCMy1IpQC7Ea44wqLJQA9tpTfNdgOndZmo3HzJ8YVJ5Bhe2JWOQwWQQmpC9TA==" crossorigin=anonymous defer></script><script src=https://koktlzz.github.io/main.min.1febbf2f6fd6a36fc2f57dd50d7935fbb640743329baeb4ef7cefcf2e7630e413371fbba976e103656b82808ee227dc4a84237edb0f8433648bef3a56900661a.js integrity="sha512-H+u/L2/Wo2/C9X3VDXk1+7ZAdDMpuutO98788udjDkEzcfu6l24QNla4KAjuIn3EqEI37bD4QzZIvvOlaQBmGg==" crossorigin=anonymous defer></script></body></html>

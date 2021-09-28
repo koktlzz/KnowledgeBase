@@ -1,0 +1,237 @@
+<!doctype html><html lang=en-us><head><script async src="https://www.googletagmanager.com/gtag/js?id=G-D022F6NT2P"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-D022F6NT2P')</script><script>(function(b,d,e,a,g){b[a]=b[a]||[],b[a].push({'gtm.start':(new Date).getTime(),event:'gtm.js'});var f=d.getElementsByTagName(e)[0],c=d.createElement(e),h=a!='dataLayer'?'&l='+a:'';c.async=!0,c.src='https://www.googletagmanager.com/gtm.js?id='+g+h,f.parentNode.insertBefore(c,f)})(window,document,'script','dataLayer','GTM-P72R45W')</script><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><link rel=preload as=font href=https://koktlzz.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://koktlzz.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://koktlzz.github.io/fonts/KaTeX_Main-Regular.woff2 type=font/woff2 crossorigin><link rel=preload as=font href=https://koktlzz.github.io/fonts/KaTeX_Math-Italic.woff2 type=font/woff2 crossorigin><link rel=stylesheet href=https://koktlzz.github.io/main.0ae7165cfeda76c765ab05aa408a696be65779f1e277afd078efecc543cc00bb72be873f087e148ccf7ac1016b22c2d2586f058c7ee5d92dcca60206eae2dd99.css integrity="sha512-CucWXP7adsdlqwWqQIppa+ZXefHid6/QeO/sxUPMALtyvoc/CH4UjM96wQFrIsLSWG8FjH7l2S3MpgIG6uLdmQ==" crossorigin=anonymous><noscript><style>img.lazyload{display:none}</style></noscript><meta name=robots content="index, follow"><meta name=googlebot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><meta name=bingbot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><title>搭建 Web 服务器 | Inspire Hub</title><meta name=description content><link rel=canonical href=https://koktlzz.github.io/programming/go/%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1%E5%99%A8/><meta property="og:locale" content="en_US"><meta property="og:type" content="article"><meta property="og:title" content="搭建 Web 服务器"><meta property="og:description" content="搭建一个简单的 web 服务 package main import ( &#34;fmt&#34; &#34;net/http&#34; &#34;strings&#34; &#34;log&#34; ) func sayhelloName(w http.ResponseWriter, r *http.Request) { r.ParseForm() // 解析参数，默认是不会解析的  fmt.Println(r.Form) // 这些信息是输出到服务器端的打印信息  fmt.Println(&#34;path&#34;, r.URL.Path) fmt.Println(&#34;scheme&#34;, r.URL.Scheme) fmt.Println(r.Form[&#34;num&#34;]) for k, v := range r.Form { fmt.Println(&#34;key:&#34;, k) fmt.Println(&#34;val:&#34;, strings.Join(v, &#34;&#34;)) } fmt.Fprintf(w, &#34;Hello World&#34;) // 这个写入到 w 的是输出到客户端的 } func main() { http.HandleFunc(&#34;/&#34;, sayhelloName) // 注册了请求/的路由规则，当请求 uri 为&#34;/&#34;，路由就会转到函数 sayhelloName  err := http.ListenAndServe(&#34;:9090&#34;, nil) // 设置监听的端口  if err !"><meta property="og:url" content="https://koktlzz.github.io/programming/go/%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1%E5%99%A8/"><meta property="og:site_name" content="Inspire Hub"><meta property="article:published_time" content="2020-11-04T09:19:42+01:00"><meta property="article:modified_time" content="2020-11-04T09:19:42+01:00"><meta property="og:image" content="https://koktlzz.github.io/doks.png"><meta property="og:image:alt" content="Inspire Hub"><meta name=twitter:card content="summary_large_image"><meta name=twitter:site content="@getdoks"><meta name=twitter:creator content="@henkverlinde"><meta name=twitter:title content="搭建 Web 服务器"><meta name=twitter:description content><meta name=twitter:image content="https://koktlzz.github.io/doks.png"><meta name=twitter:image:alt content="搭建 Web 服务器"><script type=application/ld+json>{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://koktlzz.github.io/#/schema/organization/1","name":"Doks","url":"https://koktlzz.github.io/","sameAs":["https://twitter.com/getdoks","https://github.com/h-enk/doks"],"logo":{"@type":"ImageObject","@id":"https://koktlzz.github.io/#/schema/image/1","url":"https://koktlzz.github.io/logo-doks.png","width":512,"height":512,"caption":"Doks"},"image":{"@id":"https://koktlzz.github.io/#/schema/image/1"}},{"@type":"WebSite","@id":"https://koktlzz.github.io/#/schema/website/1","url":"https://koktlzz.github.io/","name":"Inspire Hub","description":"","publisher":{"@id":"https://koktlzz.github.io/#/schema/organization/1"}},{"@type":"WebPage","@id":"https://koktlzz.github.io/programming/go/%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1%E5%99%A8/","url":"https://koktlzz.github.io/programming/go/%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1%E5%99%A8/","name":"搭建 Web 服务器","description":"","isPartOf":{"@id":"https://koktlzz.github.io/#/schema/website/1"},"about":{"@id":"https://koktlzz.github.io/#/schema/organization/1"},"datePublished":"2020-11-04T09:19:42CET","dateModified":"2020-11-04T09:19:42CET","breadcrumb":{"@id":"https://koktlzz.github.io/programming/go/%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1%E5%99%A8/#/schema/breadcrumb/1"},"primaryImageOfPage":{"@id":"https://koktlzz.github.io/programming/go/%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1%E5%99%A8/#/schema/image/2"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://koktlzz.github.io/programming/go/%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1%E5%99%A8/"]}]},{"@type":"BreadcrumbList","@id":"https://koktlzz.github.io/programming/go/%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1%E5%99%A8/#/schema/breadcrumb/1","name":"Breadcrumbs","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"WebPage","@id":"https://koktlzz.github.io/","url":"https://koktlzz.github.io/","name":"Home"}},{"@type":"ListItem","position":2,"item":{"@type":"WebPage","@id":"https://koktlzz.github.io/programming/","url":"https://koktlzz.github.io/programming/","name":"Programming"}},{"@type":"ListItem","position":3,"item":{"@type":"WebPage","@id":"https://koktlzz.github.io/programming/go/","url":"https://koktlzz.github.io/programming/go/","name":"Go"}},{"@type":"ListItem","position":4,"item":{"@id":"https://koktlzz.github.io/programming/go/%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1%E5%99%A8/"}}]},{"@context":"https://schema.org","@graph":[{"@type":"ImageObject","@id":"https://koktlzz.github.io/programming/go/%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1%E5%99%A8/#/schema/image/2","url":"https://koktlzz.github.io/doks.png","contentUrl":"https://koktlzz.github.io/doks.png","caption":"搭建 Web 服务器"}]}]}</script><meta name=theme-color content="#fff"><link rel=apple-touch-icon sizes=180x180 href=https://koktlzz.github.io/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://koktlzz.github.io/favicon-32x32.ico><link rel=icon type=image/png sizes=16x16 href=https://koktlzz.github.io/favicon-16x16.ico><link rel=manifest crossorigin=use-credentials href=https://koktlzz.github.io/site.webmanifest></head><body class="Programming single dark"><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P72R45W" height=0 width=0 style=display:none;visibility:hidden></iframe></noscript><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container-fluid><input class="menu-btn order-0" type=checkbox id=menu-btn>
+<label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://koktlzz.github.io/>Inspire Hub</a>
+<button id=mode class="btn btn-link order-2 order-md-4" type=button aria-label="Toggle mode">
+<span class=toggle-dark><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></span><span class=toggle-light><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span></button><ul class="navbar-nav social-nav order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/koktlzz><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg><span class="ms-2 visually-hidden">GitHub</span></a></li></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://koktlzz.github.io/container/docker/intro>Container</a></li><li class=nav-item><a class=nav-link href=https://koktlzz.github.io/observability/elasticstack/intro>Observability</a></li><li class=nav-item><a class=nav-link href=https://koktlzz.github.io/programming/go/intro>Programming</a></li><li class=nav-item><a class=nav-link href=https://koktlzz.github.io/infrastructure/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/tcpip%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B>Infrastructure</a></li></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container-fluid" role=document><div class=content><div class="row flex-xl-nowrap"><div class="col-lg-3 col-xl-2 d-none d-xl-block"><nav class=docs-links aria-label="Main navigation"><h3>Go</h3><ul class=list-unstyled><li><a class=docs-link href=https://koktlzz.github.io/programming/go/intro/>Getting Started</a></li><li><a class=docs-link href=https://koktlzz.github.io/programming/go/requestresponse/>Request & Response</a></li><li><a class=docs-link href=https://koktlzz.github.io/programming/go/%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1%E5%99%A8/>搭建 Web 服务器</a></li><li><a class=docs-link href=https://koktlzz.github.io/programming/go/%E4%BD%BF%E7%94%A8mysql%E6%95%B0%E6%8D%AE%E5%BA%93/>使用 MySQL 数据库</a></li></ul></nav></div><main class="docs-content col-lg-13 col-xl-11"><h1>搭建 Web 服务器</h1><p class=lead></p><h2 id=搭建一个简单的-web-服务>搭建一个简单的 web 服务<a href=#搭建一个简单的-web-服务 class=anchor aria-hidden=true>#</a></h2><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#ff79c6>package</span> main
+
+<span style=color:#ff79c6>import</span> (
+    <span style=color:#f1fa8c>&#34;fmt&#34;</span>
+    <span style=color:#f1fa8c>&#34;net/http&#34;</span>
+    <span style=color:#f1fa8c>&#34;strings&#34;</span>
+    <span style=color:#f1fa8c>&#34;log&#34;</span>
+)
+
+<span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>sayhelloName</span>(w http.ResponseWriter, r <span style=color:#ff79c6>*</span>http.Request) {
+    r.<span style=color:#50fa7b>ParseForm</span>()  <span style=color:#6272a4>// 解析参数，默认是不会解析的
+</span><span style=color:#6272a4></span>    fmt.<span style=color:#50fa7b>Println</span>(r.Form)  <span style=color:#6272a4>// 这些信息是输出到服务器端的打印信息
+</span><span style=color:#6272a4></span>    fmt.<span style=color:#50fa7b>Println</span>(<span style=color:#f1fa8c>&#34;path&#34;</span>, r.URL.Path)
+    fmt.<span style=color:#50fa7b>Println</span>(<span style=color:#f1fa8c>&#34;scheme&#34;</span>, r.URL.Scheme)
+    fmt.<span style=color:#50fa7b>Println</span>(r.Form[<span style=color:#f1fa8c>&#34;num&#34;</span>])
+    <span style=color:#ff79c6>for</span> k, v <span style=color:#ff79c6>:=</span> <span style=color:#ff79c6>range</span> r.Form {
+        fmt.<span style=color:#50fa7b>Println</span>(<span style=color:#f1fa8c>&#34;key:&#34;</span>, k)
+        fmt.<span style=color:#50fa7b>Println</span>(<span style=color:#f1fa8c>&#34;val:&#34;</span>, strings.<span style=color:#50fa7b>Join</span>(v, <span style=color:#f1fa8c>&#34;&#34;</span>))
+    }
+    fmt.<span style=color:#50fa7b>Fprintf</span>(w, <span style=color:#f1fa8c>&#34;Hello World&#34;</span>) <span style=color:#6272a4>// 这个写入到 w 的是输出到客户端的
+</span><span style=color:#6272a4></span>}
+
+<span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>main</span>() {
+    http.<span style=color:#50fa7b>HandleFunc</span>(<span style=color:#f1fa8c>&#34;/&#34;</span>, sayhelloName) <span style=color:#6272a4>// 注册了请求/的路由规则，当请求 uri 为&#34;/&#34;，路由就会转到函数 sayhelloName
+</span><span style=color:#6272a4></span>    err <span style=color:#ff79c6>:=</span> http.<span style=color:#50fa7b>ListenAndServe</span>(<span style=color:#f1fa8c>&#34;:9090&#34;</span>, <span style=color:#ff79c6>nil</span>) <span style=color:#6272a4>// 设置监听的端口
+</span><span style=color:#6272a4></span>    <span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {
+        log.<span style=color:#50fa7b>Fatal</span>(<span style=color:#f1fa8c>&#34;ListenAndServe: &#34;</span>, err)
+    }
+}
+</code></pre></div><p>在上述代码中，主函数调用了 net/http 包下的两个函数 HandleFunc() 和 ListenAndServe()。</p><h2 id=handlefunc>HandleFunc()<a href=#handlefunc class=anchor aria-hidden=true>#</a></h2><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#6272a4>// http.HandleFunc(&#34;/&#34;, sayhelloName)
+</span><span style=color:#6272a4></span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>HandleFunc</span>(pattern <span style=color:#8be9fd>string</span>, handler <span style=color:#8be9fd;font-style:italic>func</span>(ResponseWriter, <span style=color:#ff79c6>*</span>Request)) {
+    DefaultServeMux.<span style=color:#50fa7b>HandleFunc</span>(pattern, handler)
+}
+</code></pre></div><p>在本例中 pattern = &ldquo;/&rdquo;, handler = sayhelloName()，代表 HandleFunc() 注册了请求"/&ldquo;的路由规则：当请求 uri 为&rdquo;/"，路由就会转到函数 sayhelloName()。</p><p>函数 HandleFunc() 的底层实现步骤为：</p><ol><li><p>调用 DefaultServeMux.HandleFunc() 方法</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#6272a4>// DefaultServeMux.HandleFunc(pattern, handler)
+</span><span style=color:#6272a4></span><span style=color:#8be9fd;font-style:italic>func</span> (mux <span style=color:#ff79c6>*</span>ServeMux) <span style=color:#50fa7b>HandleFunc</span>(pattern <span style=color:#8be9fd>string</span>, handler <span style=color:#8be9fd;font-style:italic>func</span>(ResponseWriter, <span style=color:#ff79c6>*</span>Request)) {
+    <span style=color:#ff79c6>if</span> handler <span style=color:#ff79c6>==</span> <span style=color:#ff79c6>nil</span> {
+        <span style=color:#8be9fd;font-style:italic>panic</span>(<span style=color:#f1fa8c>&#34;http: nil handler&#34;</span>)
+    }
+    mux.<span style=color:#50fa7b>Handle</span>(pattern, <span style=color:#50fa7b>HandlerFunc</span>(handler))
+}
+</code></pre></div><p>其中，DefaultServeMux 的类型是 *ServeMux:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#6272a4>// DefaultServeMux is the default ServeMux used by Serve.
+</span><span style=color:#6272a4></span><span style=color:#8be9fd;font-style:italic>var</span> DefaultServeMux = <span style=color:#ff79c6>&amp;</span>defaultServeMux
+<span style=color:#8be9fd;font-style:italic>var</span> defaultServeMux ServeMux
+</code></pre></div><blockquote><p>ServeMux 类型是 HTTP 请求的多路转接器。它会将每一个接收的请求的 URL 与一个注册模式的列表进行匹配，并调用和 URL 最匹配的模式的处理器。</p></blockquote></li><li><p>调用 mux.Handle() 方法，向 DefaultServeMux 的 map[string]muxEntry 中增加对应的 handler 和路由规则。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#6272a4>// mux.Handle(pattern, HandlerFunc(handler))
+</span><span style=color:#6272a4></span><span style=color:#8be9fd;font-style:italic>func</span> (mux <span style=color:#ff79c6>*</span>ServeMux) <span style=color:#50fa7b>Handle</span>(pattern <span style=color:#8be9fd>string</span>, handler Handler) {
+    mux.mu.<span style=color:#50fa7b>Lock</span>()
+    <span style=color:#ff79c6>defer</span> mux.mu.<span style=color:#50fa7b>Unlock</span>()
+    <span style=color:#ff79c6>...</span>
+    <span style=color:#ff79c6>if</span> mux.m <span style=color:#ff79c6>==</span> <span style=color:#ff79c6>nil</span> {
+        mux.m = <span style=color:#8be9fd;font-style:italic>make</span>(<span style=color:#8be9fd;font-style:italic>map</span>[<span style=color:#8be9fd>string</span>]muxEntry)
+    }
+    e <span style=color:#ff79c6>:=</span> muxEntry{h: handler, pattern: pattern}
+    mux.m[pattern] = e  <span style=color:#6272a4>// 增加对应的 handler 和路由规则
+</span><span style=color:#6272a4></span>    <span style=color:#ff79c6>...</span>
+}
+</code></pre></div><p>其中，ServeMux 类型的属性如下：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#8be9fd;font-style:italic>type</span> ServeMux <span style=color:#8be9fd;font-style:italic>struct</span> {
+    mu sync.RWMutex   <span style=color:#6272a4>//锁，由于请求涉及到并发处理，因此这里需要一个锁机制
+</span><span style=color:#6272a4></span>    m  <span style=color:#8be9fd;font-style:italic>map</span>[<span style=color:#8be9fd>string</span>]muxEntry  <span style=color:#6272a4>// 路由规则，一个 string 对应一个 mux 实体，这里的 string 就是注册的路由表达式
+</span><span style=color:#6272a4></span>    hosts <span style=color:#8be9fd>bool</span> <span style=color:#6272a4>// 是否在任意的规则中带有 host 信息
+</span><span style=color:#6272a4></span>}
+
+<span style=color:#8be9fd;font-style:italic>type</span> muxEntry <span style=color:#8be9fd;font-style:italic>struct</span> {
+    explicit <span style=color:#8be9fd>bool</span>   <span style=color:#6272a4>// 是否精确匹配
+</span><span style=color:#6272a4></span>    h        Handler <span style=color:#6272a4>// 这个路由表达式对应哪个 handler
+</span><span style=color:#6272a4></span>    pattern  <span style=color:#8be9fd>string</span>  <span style=color:#6272a4>//匹配字符串
+</span><span style=color:#6272a4></span>}
+</code></pre></div></li><li><p>我们可以看到 muxEntry 类型的 key[h] 对应 Handler 类型：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#8be9fd;font-style:italic>type</span> Handler <span style=color:#8be9fd;font-style:italic>interface</span> {
+    <span style=color:#50fa7b>ServeHTTP</span>(ResponseWriter, <span style=color:#ff79c6>*</span>Request)
+}
+</code></pre></div><p>而我们定义的函数 sayhelloName 并未实现该接口，因此理论上是不能作为参数放入 e := muxEntry{h: handler, pattern: pattern} 表达式中的。这时我们注意到在第二步调用 mux.Handle(pattern, HandlerFunc(handler)) 时，其实已经通过 HandlerFunc(handler) 将函数 sayhelloName 强制转换为 HandlerFunc 类型。而类型 HandlerFunc 默认拥有方法：ServeHTTP ，因此 sayhelloName 就实现了 Handler 接口，从而可以为特定的路径处理 HTTP 请求。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#6272a4>// HandlerFunc(handler)
+</span><span style=color:#6272a4></span><span style=color:#8be9fd;font-style:italic>type</span> HandlerFunc <span style=color:#8be9fd;font-style:italic>func</span>(ResponseWriter, <span style=color:#ff79c6>*</span>Request)
+
+<span style=color:#8be9fd;font-style:italic>func</span> (f HandlerFunc) <span style=color:#50fa7b>ServeHTTP</span>(w ResponseWriter, r <span style=color:#ff79c6>*</span>Request)
+</code></pre></div></li></ol><h2 id=listenandserve>ListenAndServe()<a href=#listenandserve class=anchor aria-hidden=true>#</a></h2><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#6272a4>// err := http.ListenAndServe(&#34;:9090&#34;, nil)
+</span><span style=color:#6272a4></span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>ListenAndServe</span>(addr <span style=color:#8be9fd>string</span>, handler Handler) <span style=color:#8be9fd>error</span> {
+    server <span style=color:#ff79c6>:=</span> <span style=color:#ff79c6>&amp;</span>Server{Addr: addr, Handler: handler}
+    <span style=color:#ff79c6>return</span> server.<span style=color:#50fa7b>ListenAndServe</span>()
+}
+</code></pre></div><p>其底层实现的步骤为：</p><ol><li><p>server := &Server{Addr: addr, Handler: handler}实例化了一个 Server，它定义了运行 HTTP 服务端的参数：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#8be9fd;font-style:italic>type</span> Server <span style=color:#8be9fd;font-style:italic>struct</span> {
+    Addr           <span style=color:#8be9fd>string</span>        <span style=color:#6272a4>// 监听的 TCP 地址，如果为空字符串会使用&#34;:http&#34;
+</span><span style=color:#6272a4></span>    Handler        Handler       <span style=color:#6272a4>// 调用的处理器，如为 nil 会调用 http.DefaultServeMux
+</span><span style=color:#6272a4></span><span style=color:#ff79c6>...</span>
+}
+</code></pre></div></li><li><p>调用 Server 的 ListenAndServe() 方法，该方法分为两个部分：监听端口 (ln, err := net.Listen(&ldquo;tcp&rdquo;, addr)) 和 提供服务 (srv.Serve(ln))。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#6272a4>// return server.ListenAndServe()
+</span><span style=color:#6272a4></span><span style=color:#8be9fd;font-style:italic>func</span> (srv <span style=color:#ff79c6>*</span>Server) <span style=color:#50fa7b>ListenAndServe</span>() <span style=color:#8be9fd>error</span> {
+<span style=color:#ff79c6>...</span>
+addr <span style=color:#ff79c6>:=</span> srv.Addr
+<span style=color:#ff79c6>if</span> addr <span style=color:#ff79c6>==</span> <span style=color:#f1fa8c>&#34;&#34;</span> {
+    addr = <span style=color:#f1fa8c>&#34;:http&#34;</span>
+}
+ln, err <span style=color:#ff79c6>:=</span> net.<span style=color:#50fa7b>Listen</span>(<span style=color:#f1fa8c>&#34;tcp&#34;</span>, addr)
+<span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {
+    <span style=color:#ff79c6>return</span> err
+}
+<span style=color:#ff79c6>return</span> srv.<span style=color:#50fa7b>Serve</span>(ln)
+}
+</code></pre></div></li><li><p>调用 net.Listen() 方法监听端口，返回一个 Listener 接口。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#6272a4>// ln, err := net.Listen(&#34;tcp&#34;, addr)
+</span><span style=color:#6272a4></span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>Listen</span>(network, address <span style=color:#8be9fd>string</span>) (Listener, <span style=color:#8be9fd>error</span>) {
+<span style=color:#8be9fd;font-style:italic>var</span> lc ListenConfig
+<span style=color:#ff79c6>return</span> lc.<span style=color:#50fa7b>Listen</span>(context.<span style=color:#50fa7b>Background</span>(), network, address)
+}
+
+<span style=color:#8be9fd;font-style:italic>type</span> Listener <span style=color:#8be9fd;font-style:italic>interface</span> {
+    <span style=color:#6272a4>// Addr 返回该接口的网络地址
+</span><span style=color:#6272a4></span>    <span style=color:#50fa7b>Addr</span>() Addr
+    <span style=color:#6272a4>// Accept 等待并返回下一个连接到该接口的连接
+</span><span style=color:#6272a4></span>    <span style=color:#50fa7b>Accept</span>() (c Conn, err <span style=color:#8be9fd>error</span>)
+    <span style=color:#6272a4>// Close 关闭该接口，并使任何阻塞的 Accept 操作都会不再阻塞并返回错误。
+</span><span style=color:#6272a4></span>    <span style=color:#50fa7b>Close</span>() <span style=color:#8be9fd>error</span>
+}
+</code></pre></div><blockquote><p>Listener 是一个用于面向流的网络协议的公用的网络监听器接口。多个线程可能会同时调用一个 Listener 的方法。</p></blockquote></li><li><p>将上一步返回的 Listener 接口 ln 作为参数，调用 Sever.Serve() 方法：</p><p>启动一个 for 循环，在循环体中调用 Listener 接口的 Accept() 方法，等待接收客户端发出的请求。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#6272a4>// return srv.Serve(ln)
+</span><span style=color:#6272a4></span><span style=color:#8be9fd;font-style:italic>func</span> (srv <span style=color:#ff79c6>*</span>Server) <span style=color:#50fa7b>Serve</span>(l net.Listener) <span style=color:#8be9fd>error</span> {
+<span style=color:#ff79c6>defer</span> l.<span style=color:#50fa7b>Close</span>()
+<span style=color:#8be9fd;font-style:italic>var</span> tempDelay time.Duration <span style=color:#6272a4>// how long to sleep on accept failure
+</span><span style=color:#6272a4></span><span style=color:#ff79c6>for</span> {
+        <span style=color:#6272a4>// 等待接收客户端发出的请求，返回一个接口类型 Conn 的实例 rw
+</span><span style=color:#6272a4></span>    rw, err <span style=color:#ff79c6>:=</span> l.<span style=color:#50fa7b>Accept</span>()
+    <span style=color:#ff79c6>...</span>
+        c <span style=color:#ff79c6>:=</span> srv.<span style=color:#50fa7b>newConn</span>(rw)
+    <span style=color:#ff79c6>...</span>
+    <span style=color:#ff79c6>go</span> c.<span style=color:#50fa7b>serve</span>(connCtx)
+}
+</code></pre></div></li><li><p>c := srv.newConn(rw) 对客户端的每个请求实例化一个 conn（此处的 c 为结构体类型 conn，上文中的 rw 为接口类型 Conn, 注意大小写）, 即创建了一个连接实体。这个连接实体里面保存了该次请求的信息。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#8be9fd;font-style:italic>func</span> (srv <span style=color:#ff79c6>*</span>Server) <span style=color:#50fa7b>newConn</span>(rwc net.Conn) <span style=color:#ff79c6>*</span>conn {
+c <span style=color:#ff79c6>:=</span> <span style=color:#ff79c6>&amp;</span>conn{
+    server: srv,
+    rwc:    rwc,
+}
+<span style=color:#ff79c6>if</span> debugServerConnections {
+    c.rwc = <span style=color:#50fa7b>newLoggingConn</span>(<span style=color:#f1fa8c>&#34;server&#34;</span>, c.rwc)
+}
+<span style=color:#ff79c6>return</span> c
+}
+</code></pre></div></li><li><p>go c.serve(connCtx) 调用 conn.Serve() 方法开启一个 goroutine 为这个连接进行服务。这体现了 go 的支持高并发，用户的每一次请求都是在一个新的 goroutine 去服务，相互不影响。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#8be9fd;font-style:italic>func</span> (c <span style=color:#ff79c6>*</span>conn) <span style=color:#50fa7b>serve</span>(ctx context.Context) {
+    <span style=color:#ff79c6>...</span>
+    <span style=color:#ff79c6>for</span> {
+        <span style=color:#6272a4>// 读取每个请求的内容
+</span><span style=color:#6272a4></span>        w, err <span style=color:#ff79c6>:=</span> c.<span style=color:#50fa7b>readRequest</span>(ctx)
+        <span style=color:#ff79c6>if</span> c.r.remain <span style=color:#ff79c6>!=</span> c.server.<span style=color:#50fa7b>initialReadLimitSize</span>() {
+            <span style=color:#6272a4>// If we read any bytes off the wire, we&#39;re active.
+</span><span style=color:#6272a4></span>            c.<span style=color:#50fa7b>setState</span>(c.rwc, StateActive)
+        }
+ <span style=color:#ff79c6>...</span>
+ <span style=color:#6272a4>// 处理请求
+</span><span style=color:#6272a4></span> serverHandler{c.server}.<span style=color:#50fa7b>ServeHTTP</span>(w, w.req)
+ <span style=color:#ff79c6>...</span>.
+ }
+</code></pre></div></li><li><p>Serve() 方法分为两个部分，分别是：w, err := c.readRequest(ctx) 和 serverHandler{c.server}.ServeHTTP(w, w.req)。首先调用 conn.readRequest() 方法对请求进行解析，返回了一个 *response 类型的响应 w：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#6272a4>// w, err := c.readRequest(ctx)
+</span><span style=color:#6272a4></span><span style=color:#8be9fd;font-style:italic>func</span> (c <span style=color:#ff79c6>*</span>conn) <span style=color:#50fa7b>readRequest</span>(ctx context.Context) (w <span style=color:#ff79c6>*</span>response, err <span style=color:#8be9fd>error</span>) {
+    <span style=color:#ff79c6>...</span>
+        w = <span style=color:#ff79c6>&amp;</span>response{
+        conn:          c,
+        cancelCtx:     cancelCtx,
+        req:           req,
+        reqBody:       req.Body,
+     <span style=color:#ff79c6>...</span>
+     }
+ <span style=color:#ff79c6>...</span>
+}
+</code></pre></div><p>结构体类型 response 代表对一个 HTTP 请求的响应。由于该结构体首字母小写，因此无法在包外调用。而 *response 实现了 ResponseWriter 的全部方法。因此我们可以将 *response 当作一个 ResponseWriter 传入相应的函数，从而通过引用传递来操作 response。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#8be9fd;font-style:italic>type</span> ResponseWriter <span style=color:#8be9fd;font-style:italic>interface</span> {
+    <span style=color:#50fa7b>Header</span>() Header
+    <span style=color:#50fa7b>WriteHeader</span>(<span style=color:#8be9fd>int</span>)
+    <span style=color:#50fa7b>Write</span>([]<span style=color:#8be9fd>byte</span>) (<span style=color:#8be9fd>int</span>, <span style=color:#8be9fd>error</span>)
+}
+
+<span style=color:#8be9fd;font-style:italic>type</span> response <span style=color:#8be9fd;font-style:italic>struct</span> {
+ conn             <span style=color:#ff79c6>*</span>conn
+ req              <span style=color:#ff79c6>*</span>Request <span style=color:#6272a4>// request for this response
+</span><span style=color:#6272a4></span> <span style=color:#ff79c6>...</span>
+}
+
+<span style=color:#8be9fd;font-style:italic>func</span> (w <span style=color:#ff79c6>*</span>response) <span style=color:#50fa7b>Header</span>() Header {
+    <span style=color:#ff79c6>if</span> w.cw.header <span style=color:#ff79c6>==</span> <span style=color:#ff79c6>nil</span> <span style=color:#ff79c6>&amp;&amp;</span> w.wroteHeader <span style=color:#ff79c6>&amp;&amp;</span> !w.cw.wroteHeader {
+        w.cw.header = w.handlerHeader.<span style=color:#50fa7b>Clone</span>()
+    }
+    w.calledHeader = <span style=color:#ff79c6>true</span>
+    <span style=color:#ff79c6>return</span> w.handlerHeader
+}
+
+<span style=color:#8be9fd;font-style:italic>func</span> (w <span style=color:#ff79c6>*</span>response) <span style=color:#50fa7b>WriteHeader</span>(code <span style=color:#8be9fd>int</span>) {
+    <span style=color:#ff79c6>if</span> w.conn.<span style=color:#50fa7b>hijacked</span>() {
+        caller <span style=color:#ff79c6>:=</span> <span style=color:#50fa7b>relevantCaller</span>()
+        w.conn.server.<span style=color:#50fa7b>logf</span>(<span style=color:#f1fa8c>&#34;http: response.WriteHeader on hijacked connection from %s (%s:%d)&#34;</span>, caller.Function, path.<span style=color:#50fa7b>Base</span>(caller.File), caller.Line)
+        <span style=color:#ff79c6>return</span>
+    }
+    <span style=color:#ff79c6>...</span>
+}
+
+<span style=color:#8be9fd;font-style:italic>func</span> (w <span style=color:#ff79c6>*</span>response) <span style=color:#50fa7b>Write</span>(data []<span style=color:#8be9fd>byte</span>) (n <span style=color:#8be9fd>int</span>, err <span style=color:#8be9fd>error</span>) {
+    <span style=color:#ff79c6>return</span> w.<span style=color:#50fa7b>write</span>(<span style=color:#8be9fd;font-style:italic>len</span>(data), data, <span style=color:#f1fa8c>&#34;&#34;</span>)
+}
+</code></pre></div><p>这也解释了为什么 ServeHTTP 方法中的两个参数：ResponseWriter 和 *Request，只有 Request 是按引用传递的，因为传入 ResponseWriter 的变量本质是 *response。</p></li><li><p>随后在 Serve() 方法中调用 serverHandler 结构体类型的 ServeHTTP 方法，并将 w 和 w.req 分别作为响应和请求传入：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go>serverHandler{c.server}.<span style=color:#50fa7b>ServeHTTP</span>(w, w.req)
+</code></pre></div><p>serverHandler 结构体只有一个字段 srv，它是一个指向 Server 结构体类型的指针。调用 ServeHTTP 方法时，会首先判断之前实例化得到的 Server 中的 Handler 字段是否为空。若为空，则设置 handler = DefaultServeMux。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#8be9fd;font-style:italic>type</span> serverHandler <span style=color:#8be9fd;font-style:italic>struct</span> {
+ srv <span style=color:#ff79c6>*</span>Server
+}
+
+<span style=color:#8be9fd;font-style:italic>func</span> (sh serverHandler) <span style=color:#50fa7b>ServeHTTP</span>(rw ResponseWriter, req <span style=color:#ff79c6>*</span>Request) {
+ handler <span style=color:#ff79c6>:=</span> sh.srv.Handler
+ <span style=color:#ff79c6>if</span> handler <span style=color:#ff79c6>==</span> <span style=color:#ff79c6>nil</span> {
+     handler = DefaultServeMux
+ }
+ <span style=color:#ff79c6>...</span>
+ handler.<span style=color:#50fa7b>ServeHTTP</span>(rw, req)
+}
+</code></pre></div><p>由于本例中调用 http.ListenAndServe(":9090", nil) 时，传入 Handler 的参数值为 nil，因此设置 handler = DefaultServeMux。上文提到，DefaultServeMux 是一个指向 ServeMux 的指针，而 *ServeMux 的 ServeHTTP 方法为：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go>\\ handler.<span style=color:#50fa7b>ServeHTTP</span>(rw, req)
+<span style=color:#8be9fd;font-style:italic>func</span> (mux <span style=color:#ff79c6>*</span>ServeMux) <span style=color:#50fa7b>ServeHTTP</span>(w ResponseWriter, r <span style=color:#ff79c6>*</span>Request) {
+ <span style=color:#ff79c6>...</span>
+ h, _ <span style=color:#ff79c6>:=</span> mux.<span style=color:#50fa7b>Handler</span>(r)
+ h.<span style=color:#50fa7b>ServeHTTP</span>(w, r)
+}
+</code></pre></div><p>其中，h, _ := mux.Handler(r) 内部还调用了 ServeMux.handler 方法，其作用是调用 mux.match() 根据 path 在 DefaultServeMux 中寻找对应的 Handler 函数。由于我们已经通过在主函数中的第一行代码中调用 HandleFunc() 向 DefaultServeMux 中注册了请求"/&ldquo;的路由规则（映射关系），因此当请求 uri 为&rdquo;/&ldquo;时，返回的变量 h 便是 Handler 函数 sayhelloName。</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#8be9fd;font-style:italic>func</span> (mux <span style=color:#ff79c6>*</span>ServeMux) <span style=color:#50fa7b>Handler</span>(r <span style=color:#ff79c6>*</span>Request) (h Handler, pattern <span style=color:#8be9fd>string</span>) {
+ <span style=color:#ff79c6>...</span>
+ host <span style=color:#ff79c6>:=</span> <span style=color:#50fa7b>stripHostPort</span>(r.Host)
+ <span style=color:#ff79c6>...</span>
+ <span style=color:#ff79c6>return</span> mux.<span style=color:#50fa7b>handler</span>(host, r.URL.Path)
+}
+
+<span style=color:#6272a4>// handler is the main implementation of Handler.
+</span><span style=color:#6272a4></span><span style=color:#8be9fd;font-style:italic>func</span> (mux <span style=color:#ff79c6>*</span>ServeMux) <span style=color:#50fa7b>handler</span>(host, path <span style=color:#8be9fd>string</span>) (h Handler, pattern <span style=color:#8be9fd>string</span>) {
+ <span style=color:#ff79c6>...</span>
+ <span style=color:#ff79c6>if</span> mux.hosts {
+     h, pattern = mux.<span style=color:#50fa7b>match</span>(host <span style=color:#ff79c6>+</span> path)
+ }
+ <span style=color:#ff79c6>if</span> h <span style=color:#ff79c6>==</span> <span style=color:#ff79c6>nil</span> {
+     h, pattern = mux.<span style=color:#50fa7b>match</span>(path)
+ }
+ <span style=color:#ff79c6>if</span> h <span style=color:#ff79c6>==</span> <span style=color:#ff79c6>nil</span> {
+     h, pattern = <span style=color:#50fa7b>NotFoundHandler</span>(), <span style=color:#f1fa8c>&#34;&#34;</span>
+ }
+ <span style=color:#ff79c6>return</span>
+}
+</code></pre></div></li><li><p>因此上述代码中的 h.ServeHTTP(w, r) 就是调用了 Handler 函数 sayhelloName 的 ServeHttp 方法：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#8be9fd;font-style:italic>func</span> (f HandlerFunc) <span style=color:#50fa7b>ServeHTTP</span>(w ResponseWriter, r <span style=color:#ff79c6>*</span>Request) {
+    <span style=color:#50fa7b>f</span>(w, r)
+}
+</code></pre></div><blockquote><p>ServeHTTP 方法有 2 个参数，第二个参数是 *Request ，该对象包含了该 HTTP 请求的所有的信息，比如请求地址、Header 和 Body 等信息；第一个参数是 ResponseWriter ，利用 ResponseWriter 可以构造针对该请求的响应。</p></blockquote><p>这个方法内部其实就是调用 sayhelloName 本身。</p></li></ol><h2 id=实现流程图>实现流程图<a href=#实现流程图 class=anchor aria-hidden=true>#</a></h2><p><img src=https://cdn.jsdelivr.net/gh/koktlzz/NoteImg@main/3.3.illustrator.png alt=3.3.illustrator></p><h2 id=测试结果>测试结果<a href=#测试结果 class=anchor aria-hidden=true>#</a></h2><h3 id=无参数发起请求>无参数发起请求<a href=#无参数发起请求 class=anchor aria-hidden=true>#</a></h3><ul><li>客户端</li></ul><p><img src=https://cdn.jsdelivr.net/gh/koktlzz/ImgBed@master/20201225020323.png alt=20201225020323></p><ul><li>服务端</li></ul><p><img src=https://cdn.jsdelivr.net/gh/koktlzz/ImgBed@master/20201225020402.png alt=20201225020402></p><h3 id=带参数发起请求>带参数发起请求<a href=#带参数发起请求 class=anchor aria-hidden=true>#</a></h3><ul><li>客户端</li></ul><p><img src=https://cdn.jsdelivr.net/gh/koktlzz/ImgBed@master/20201225020554.png alt=20201225020554></p><ul><li>服务端</li></ul><p><img src=https://cdn.jsdelivr.net/gh/koktlzz/ImgBed@master/20201226200222.png alt=20201226200222></p><p class=edit-page><a href=https://github.com/koktlzz/koktlzz.github.io/blob/master/content/Programming/Go/%e6%90%ad%e5%bb%baWeb%e6%9c%8d%e5%8a%a1%e5%99%a8.md><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><path d="M17 3a2.828 2.828.0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>Edit this page on GitHub</a></p><div class="docs-navigation d-flex justify-content-between"><a href=https://koktlzz.github.io/programming/go/requestresponse/><div class="card my-1"><div class="card-body py-2">&larr; Request & Response</div></div></a><a class=ms-auto href=https://koktlzz.github.io/programming/go/%E4%BD%BF%E7%94%A8mysql%E6%95%B0%E6%8D%AE%E5%BA%93/><div class="card my-1"><div class="card-body py-2">使用 MySQL 数据库 &rarr;</div></div></a></div><script src=https://utteranc.es/client.js repo=koktlzz/koktlzz.github.io issue-term=pathname theme=photon-dark crossorigin=anonymous async></script></main><nav class="docs-toc d-none d-xl-block col-lg-3 col-xl-2" aria-label="Secondary navigation"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=#搭建一个简单的-web-服务>搭建一个简单的 web 服务</a></li><li><a href=#handlefunc>HandleFunc()</a></li><li><a href=#listenandserve>ListenAndServe()</a></li><li><a href=#实现流程图>实现流程图</a></li><li><a href=#测试结果>测试结果</a><ul><li><a href=#无参数发起请求>无参数发起请求</a></li><li><a href=#带参数发起请求>带参数发起请求</a></li></ul></li></ul></nav></div></nav></div></div></div><footer class="footer text-muted"><div class=container><div class=row><div class="col-lg-8 order-last order-lg-first"><ul class=list-inline><li class=list-inline-item></li></ul></div><div class="col-lg-8 order-first order-lg-last text-lg-end"><ul class=list-inline></ul></div></div></div></footer><script src=https://koktlzz.github.io/js/bootstrap.min.d67050adf5d370668aede4201f82af781b16970934804995a1ca37c1ee9222c2fc530972aa6d5d2b6124caf1fe318f139aac99df2c1e89af65504fc1185c7972.js integrity="sha512-1nBQrfXTcGaK7eQgH4KveBsWlwk0gEmVoco3we6SIsL8Uwlyqm1dK2EkyvH+MY8TmqyZ3yweia9lUE/BGFx5cg==" crossorigin=anonymous defer></script><script src=https://koktlzz.github.io/js/vendor/katex/dist/katex.min.b334e5b00c45f572e7f38a543046f36854bf4cbb543880480c09271a0efedc694d6905f719934f6ede2f26f52e80411c05b90121d722cbf8be2fa8fc51bc6b81.js integrity="sha512-szTlsAxF9XLn84pUMEbzaFS/TLtUOIBIDAknGg7+3GlNaQX3GZNPbt4vJvUugEEcBbkBIdciy/i+L6j8UbxrgQ==" crossorigin=anonymous defer></script><script src=https://koktlzz.github.io/js/vendor/katex/dist/contrib/auto-render.min.916823ec103cf367b71e28a6f01513cb9c3ac6708ccb5229402ec46b8e30a8b25003db694df35d80e9dd666a371f327c6152790617b6256390c164109a90bd4c.js integrity="sha512-kWgj7BA882e3Hiim8BUTy5w6xnCMy1IpQC7Ea44wqLJQA9tpTfNdgOndZmo3HzJ8YVJ5Bhe2JWOQwWQQmpC9TA==" crossorigin=anonymous defer></script><script src=https://koktlzz.github.io/main.min.1febbf2f6fd6a36fc2f57dd50d7935fbb640743329baeb4ef7cefcf2e7630e413371fbba976e103656b82808ee227dc4a84237edb0f8433648bef3a56900661a.js integrity="sha512-H+u/L2/Wo2/C9X3VDXk1+7ZAdDMpuutO98788udjDkEzcfu6l24QNla4KAjuIn3EqEI37bD4QzZIvvOlaQBmGg==" crossorigin=anonymous defer></script></body></html>

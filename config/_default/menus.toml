@@ -15,7 +15,7 @@
 
 [[main]]
   name = "Infrastructure"
-  url = "/Infrastructure/计算机网络基础/tcpip网络模型"
+  url = "/Infrastructure/计算机网络/tcpip网络模型"
   weight = 50
 
 [[container]]

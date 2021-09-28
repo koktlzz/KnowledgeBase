@@ -28,6 +28,11 @@
   url = "/Prometheus/Prometheus/intro"
   weight = 60
 
+[[main]]
+  name = "Opentelemetry"
+  url = "/Opentelemetry/Opentelemetry/intro"
+  weight = 70
+
 [[docker]]
   name = "Docker 基础"
   weight = 10
@@ -99,6 +104,18 @@
   weight = 30
   identifier = "Linux"
   url = "/Infra/Linux"
+
+[[prometheus]]
+  name = "prometheus"
+  weight = 10
+  identifier = "prometheus"
+  url = "/Infra/Prometheus"
+
+[[opentelemetry]]
+  name = "opentelemetry"
+  weight = 10
+  identifier = "opentelemetry"
+  url = "/Infra/Opentelemetry"
 
 [[social]]
   name = "GitHub"

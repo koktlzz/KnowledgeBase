@@ -87,7 +87,7 @@ Sealos 还支持部分组件的自定义安装、Pod CIDR 配置以及增删节�
 docker run -d -p 5000:5000 --name=registry --restart=always --privileged=true --log-driver=none -v /data/registry:/tmp/registry registry
 ```
 
-以上传 jaeger-operator 镜像为例，镜像仓库地址为：[10.122.70.68:5000](http://10.122.70.68:5000/)：
+镜像仓库地址为：[10.122.70.68:5000](http://10.122.70.68:5000/)。以上传 jaeger-operator 镜像为例，步骤如下：
 
 ```shell
 # 导入镜像

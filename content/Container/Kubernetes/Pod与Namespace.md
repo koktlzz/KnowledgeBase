@@ -91,7 +91,7 @@ status:
 
 ### 生命周期
 
-<image src="https://cdn.jsdelivr.net/gh/koktlzz/ImgBed@master/20210130011905.png" width=80%>
+![podlifecycle](https://cdn.jsdelivr.net/gh/koktlzz/ImgBed@master/20210130011905.png)
 
 - Pod 的状态有：Pending、Running、Succeeded、Failed 和 Unkown，容器的状态有：Waiting、Running 和 Terminated；
 - Pod 遵循一个预定义的生命周期，起始于 Pending 阶段，如果至少其中有一个应用容器正常启动，则进入 Running 阶段。如果 Pod 中的容器均成功正常退出，则 Pod 为 Succeeded 状态。若 Pod 中的容器均已退出但至少有一个容器因为发生错误而退出，则 Pod 为 Failed 状态；

@@ -59,7 +59,7 @@ Update interval : 1028.6 seconds
 Leap status     : Normal
 ```
 
-确认安装环境符合 [要求](https://github.com/fanux/sealos#%E8%A6%81%E6%B1%82%E5%92%8C%E5%BB%BA%E8%AE%AE) 后，我们便可以开始安装集群：
+确认安装环境符合[要求](https://github.com/fanux/sealos#%E8%A6%81%E6%B1%82%E5%92%8C%E5%BB%BA%E8%AE%AE)后，我们便可以开始安装集群：
 
 ```shell
 # 下载并安装 sealos, sealos 是个 golang 的二进制工具，直接下载拷贝到 bin 目录即可，release 页面也可下载

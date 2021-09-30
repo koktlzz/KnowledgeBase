@@ -99,7 +99,7 @@ koktlzz.github.io.      3600    IN      A       185.199.111.153
 - AAAA 记录：指定主机名（或域名）对应的 IPv6 地址的记录；
 - NS（Name Server）记录：指定主机名（或域名）由哪个 DNS 服务器来进行解析；
 - CNAME 记录 (Canonical Name)：将一个或多个主机名（域名）映射到一个域名记录上。例如可以将 ftp.example.com 和 www.example.com 指向 CNAME 记录 example.com，这样访问 ftp.example.com 时便会解析 example.com 对应的 IP 地址（A 记录）；
-- SRV 记录：标识某台主机暴露的某个服务，其格式为`_Service._Proto.Name TTL Class SRV Priority Weight Port Target`。其中，Service 是目标主机提供的服务名称，Proto 是协议类型（_TCP/_UDP），Port 是服务暴露的端口（前加、_），Target 是目标主机的域名。
+- SRV 记录：标识某台主机暴露的某个服务，其格式为`_Service._Proto.Name TTL Class SRV Priority Weight Port Target`。其中，_Service 是目标主机提供的服务名称，Proto 是协议类型（_TCP/_UDP），Port 是服务暴露的端口，Target 是目标主机的域名。
 
 ## UDP 协议
 

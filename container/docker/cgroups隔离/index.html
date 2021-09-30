@@ -34,7 +34,7 @@ cgroup.clone_children  cpuacct.usage_all          cpuacct.usage_user  cpu.shares
 cgroup.procs           cpuacct.usage_percpu       cpu.cfs_period_us   cpu.stat           release_agent
 cgroup.sane_behavior   cpuacct.usage_percpu_sys   cpu.cfs_quota_us    docker             system.slice
 cpuacct.stat           cpuacct.usage_percpu_user  cpu.rt_period_us    init.scope         tasks
-</code></pre></div><p>Docker daemon 首先会在子系统的挂载目录下创建一个名为 docker 的控制组，然后在 docker 控制组中再为每个容器创建一个以容器 id 命名的子控制组。即使上层控制组的文件系统被卸载，下层的子控制组配置依然有效。docker 控制组的层级结构如下所示：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#ff79c6>[</span>root@koktlzz docker<span style=color:#ff79c6>]</span><span style=color:#6272a4># tree /sys/fs/cgroup/cpu/docker</span>
+</code></pre></div><p>Docker Daemon 首先会在子系统的挂载目录下创建一个名为 docker 的控制组，然后在 docker 控制组中再为每个容器创建一个以容器 id 命名的子控制组。即使上层控制组的文件系统被卸载，下层的子控制组配置依然有效。docker 控制组的层级结构如下所示：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#ff79c6>[</span>root@koktlzz docker<span style=color:#ff79c6>]</span><span style=color:#6272a4># tree /sys/fs/cgroup/cpu/docker</span>
 /sys/fs/cgroup/cpu/docker
 ├── cgroup.clone_children
 ├── cgroup.procs

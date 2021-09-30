@@ -17,7 +17,7 @@ weight: 200
 
 DNS(Domain Name System) 是“域名系统”的英文缩写，是一种组织成域层次结构的计算机和网络服务命名系统。它在大多数情况下运行在 UDP 协议之上，从事将**主机名或域名转换为实际 IP 地址**的工作。
 
-当你访问本网站的域名 koktlzz.github.io，操作系统会先检查自己本地的 hosts 文件是否有这个网址映射关系，如果有，就先调用这个 IP 地址映射，完成域名解析。
+当你访问本网站的域名`koktlzz.github.io`，操作系统会先检查自己本地的 hosts 文件是否有这个网址映射关系，如果有，就先调用这个 IP 地址映射，完成域名解析。
 
 ```bash
 [root@koktlzz ~]# cat /etc/hosts
@@ -38,7 +38,7 @@ nameserver 100.100.2.136
 nameserver 100.100.2.138
 ```
 
-由于本站网址 koktlzz.github.io 的全称域名（FQDN）为 koktlzz.github.io.，因此本地 DNS 服务器首先将请求转发至根域名服务器（.），根域名服务器返回一个负责管理。io 域的顶级域名服务器的 IP 地址。本地 DNS 服务器收到信息后，将会再次请求该顶级域名服务器。该服务器收到请求后，如果自己无法解析，它就会返回负责管理 github.io 的次级域名服务器地址给本地 DNS 服务器。本地 DNS 服务器重复上面的步骤，直至找到 koktlzz.github.io 的主机 IP 地址。域名的层级结构如下：
+由于本站网址的全称域名（FQDN）为`koktlzz.github.io.`，因此本地 DNS 服务器首先将请求转发至根域名服务器（.），根域名服务器返回一个负责管理。io 域的顶级域名服务器的 IP 地址。本地 DNS 服务器收到信息后，将会再次请求该顶级域名服务器。该服务器收到请求后，如果自己无法解析，它就会返回负责管理`github.io`的次级域名服务器地址给本地 DNS 服务器。本地 DNS 服务器重复上面的步骤，直至找到`koktlzz.github.io`的主机 IP 地址。域名的层级结构如下：
 
 ![20210420](https://cdn.jsdelivr.net/gh/koktlzz/ImgBed@master/20210420.jpeg)
 
@@ -84,7 +84,7 @@ koktlzz.github.io.      3600    IN      A       185.199.111.153
 ;; Received 110 bytes from 198.51.45.5#53(dns2.p05.nsone.net) in 62 ms
 ```
 
-每行输出结果共有 5 个字段，第一个字段是请求，最后一个字段是响应。第二个字段是 DNS 响应的有效时间 TimetoLive（以秒为单位），一小时内有效，而第四个字段代表 DNS 响应/请求的类型。从输出结果的 Recieve from 信息中我们可以看到此次 DNS 解析共经过了：本地 DNS 服务器 100.100.2.136、根域名服务器 m.root-servers.net、顶级域名服务器 a2.nic.io 和权威域名服务器 dns2.p05.nsone.net。这个权威域名服务器实际上是由次级域名服务器 github.io. 的域名注册商维护的，它可以根据已有配置（就像 hosts 文件那样）直接返回 koktlzz.github.io. 域名的 IP 地址。
+每行输出结果共有 5 个字段，第一个字段是请求，最后一个字段是响应。第二个字段是 DNS 响应的有效时间 TimetoLive（以秒为单位），一小时内有效，而第四个字段代表 DNS 响应/请求的类型。从输出结果的 Recieve from 信息中我们可以看到此次 DNS 解析共经过了：本地 DNS 服务器 100.100.2.136、根域名服务器 m.root-servers.net、顶级域名服务器 a2.nic.io 和权威域名服务器 dns2.p05.nsone.net。这个权威域名服务器实际上是由次级域名服务器`github.io.`的域名注册商维护的，它可以根据已有配置（就像 hosts 文件那样）直接返回`koktlzz.github.io.`域名的 IP 地址。
 
 上述过程用图片说明可能更加直观：
 

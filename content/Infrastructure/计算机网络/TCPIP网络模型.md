@@ -33,7 +33,7 @@ weight: 100
 
 ![20201223153643](https://cdn.jsdelivr.net/gh/koktlzz/NoteImg@main/20201223153643.png)
 
-上述连接采用了 HTTP1.1 协议。那么它和 1.0 协议的区别是什么呢？我们使用 **telnet** 命令新建一个连接，如果使用 HTTP1.1 协议，即输入 **GET / HTTP/1.1** 后两次回车，我们可以看到 baidu.com 的响应且连接依然存在；然而如果输入的是 **GET / HTTP/1.0**，那么我们接收到响应后连接就中断了：
+上述连接采用了 HTTP1.1 协议，那么它和 1.0 协议的区别是什么呢？我们使用 **telnet** 命令新建一个连接，如果使用 HTTP1.1 协议，即输入 **GET / HTTP/1.1** 后两次回车，我们可以看到 baidu.com 的响应且连接依然存在；然而如果输入的是 **GET / HTTP/1.0**，那么我们接收到响应后连接就中断了：
 
 ![20201223160159](https://cdn.jsdelivr.net/gh/koktlzz/NoteImg@main/20201223160159.png)
 
@@ -55,9 +55,9 @@ weight: 100
 
 ![tcp](https://cdn.jsdelivr.net/gh/koktlzz/ImgBed@master/tcp.PNG)
 
-- SYN:Synchronous 建立连接
-- ACK:Acknowledge 确认
-- FIN:Finish 结束连接
+- SYN：Synchronous 建立连接
+- ACK：Acknowledge 确认
+- FIN：Finish 结束连接
 
 使用抓包工具 **tcpdump**：
 

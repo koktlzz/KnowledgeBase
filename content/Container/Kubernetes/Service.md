@@ -91,11 +91,11 @@ Headless Service 不提供负载均衡的特性，也没有自己的 IP 地址�
 
 ## 代理模式
 
-- [**iptables**](https://www.digitalocean.com/community/tutorials/a-deep-dive-into-iptables-and-netfilter-architecture)：由 kube-proxy 负责为每一个 Service 创建和维护 iptables 的路由规则，其余工作由内核的 iptables 完成。当数据包发往 Service 时，iptables 承担了从 Service 的 IP 地址到 Pod 的 IP 地址的目的地址转换（DNAT）和负载均衡工作。在默认情况下，iptables 会将请求随机重定向到由 Service 代理的一组 Pod 中的某个 Pod 上。另外，iptables 还使用 Netfilter 的 conntrack 工具包记录选择的目标 Pod 的 IP 地址。这样当数据包返回时，iptables 便可以根据该记录，将返回数据包的源地址由 Pod 的 IP 地址转换为 Service 的 IP 的地址（SNAT）。其底层实现细节可参考：[iptables: How Kubernetes Services Direct Traffic to Pods](https://dustinspecker.com/posts/iptables-how-kubernetes-services-direct-traffic-to-pods/)
+- [**iptables**](https://www.digitalocean.com/community/tutorials/a-deep-dive-into-iptables-and-netfilter-architecture)：由 kube-proxy 负责为每一个 Service 创建和维护 iptables 的路由规则，其余工作由内核的 iptables 完成。当数据包发往 Service 时，iptables 承担了从 Service 的 IP 地址到 Pod 的 IP 地址的目的地址转换（DNAT）和负载均衡工作。在默认情况下，iptables 会将请求随机重定向到由 Service 代理的一组 Pod 中的某个 Pod 上。另外，iptables 还使用 Netfilter 的 conntrack 工具包记录选择的目标 Pod 的 IP 地址。这样当数据包返回时，iptables 便可以根据该记录，将返回数据包的源地址由 Pod 的 IP 地址转换为 Service 的 IP 的地址（SNAT）。其底层实现细节可参考：[iptables: How Kubernetes Services Direct Traffic to Pods](https://dustinspecker.com/posts/iptables-how-kubernetes-services-direct-traffic-to-pods/)。
 
 ![demo.002](https://cdn.jsdelivr.net/gh/koktlzz/ImgBed@master/demo.002.png)
 
-- **IPVS**：kube-proxy 监视 Service 和 Endpoint 对象的改变，调用 netlink 接口相应地创建 IPVS 规则，并定期地将 IPVS 规则与 Service 和 Endpoint 对象同步。IPVS 可以转发 TCP/UDP 请求到实际的服务器上，使得一组实际的服务器（Pod）看起来像是只通过一个单一 IP 地址（Service）访问的服务一样。欲了解其底层实现细节可阅读：[IPVS: How Kubernetes Services Direct Traffic to Pods](https://dustinspecker.com/posts/ipvs-how-kubernetes-services-direct-traffic-to-pods/)
+- **IPVS**：kube-proxy 监视 Service 和 Endpoint 对象的改变，调用 netlink 接口相应地创建 IPVS 规则，并定期地将 IPVS 规则与 Service 和 Endpoint 对象同步。IPVS 可以转发 TCP/UDP 请求到实际的服务器上，使得一组实际的服务器（Pod）看起来像是只通过一个单一 IP 地址（Service）访问的服务一样。欲了解其底层实现细节可阅读：[kube-proxy IPVS 模式的工作原理](https://fuckcloudnative.io/posts/ipvs-how-kubernetes-services-direct-traffic-to-pods/)。
 
 ![234259911661134760](https://cdn.jsdelivr.net/gh/koktlzz/NoteImg@main/234259911661134760.jpg)
 
@@ -263,4 +263,4 @@ spec:
 
 [iptables: How Kubernetes Services Direct Traffic to Pods](https://dustinspecker.com/posts/iptables-how-kubernetes-services-direct-traffic-to-pods/)
 
-[IPVS: How Kubernetes Services Direct Traffic to Pods](https://dustinspecker.com/posts/ipvs-how-kubernetes-services-direct-traffic-to-pods/)
+[kube-proxy IPVS 模式的工作原理](https://fuckcloudnative.io/posts/ipvs-how-kubernetes-services-direct-traffic-to-pods/)

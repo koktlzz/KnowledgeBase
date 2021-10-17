@@ -8,7 +8,7 @@ images: []
 menu:
   infrastructure:
     parent: "Linux"
-weight: 800
+weight: 900
 ---
 
 ## 默认权限

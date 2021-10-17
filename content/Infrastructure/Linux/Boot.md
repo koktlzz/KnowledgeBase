@@ -11,7 +11,9 @@ menu:
 weight: 800
 ---
 
-启动一台 Linux 机器的过程分为两个部分：Boot 和 Startup。其中，Boot 起始于计算机启动，在内核初始化完成且 Systemd 进程开始加载后结束。紧接着， Startup 接管任务，使计算机达到一个用户可操作的状态。
+启动一台 Linux 机器的过程可以分为两个部分：Boot 和 Startup。其中，Boot 起始于计算机启动，在内核初始化完成且 Systemd 进程开始加载后结束。紧接着， Startup 接管任务，使计算机达到一个用户可操作的状态。
+
+![202110171642](https://cdn.jsdelivr.net/gh/koktlzz/ImgBed@master/202110171642.jpeg)
 
 ## Boot
 
@@ -41,9 +43,9 @@ POST 检查完毕后会发出一个 BIOS 中断调用 [INT 13H](https://en.wikip
 
 #### stage 1.5
 
-446 字节的 stage 1 文件放不下能够识别文件系统的代码，只能通过计算扇区的偏移量来定位和加载 stage 1.5，因此 stage 1.5 文件 core.img 必须位于主引导记录本身和驱动器的第一个分区（partition）之间。第一个分区从扇区 63 开始，与位于扇区 0 的主引导记录之间有 62 个扇区（每个 512 字节），因此有足够的空间存储大小为 25389 字节的 core.img 文件。
+446 字节的 stage 1 文件放不下能够识别文件系统的代码，只能通过计算扇区的偏移量来定位和加载 stage 1.5，因此 stage 1.5 文件 core.img 必须位于主引导记录和驱动器的第一个分区（partition）之间。第一个分区从扇区 63 开始，与位于扇区 0 的主引导记录之间有 62 个扇区（每个 512 字节），因此有足够的空间存储大小为 25389 字节的 core.img 文件。
 
-core.img 文件中包含一些常见的文件系统驱动程序，如 EXT、FAT和NTFS等，它和 boot.img 文件均位于 /boot/grub2 目录下：
+core.img 文件中包含一些常见的文件系统驱动程序，如 EXT、FAT 和 NTFS 等，它和 boot.img 文件均位于 /boot/grub2 目录下：
 
 ```shell
 [root@bastion ~]# ls /boot/grub2/i386-pc/ | grep img
@@ -51,7 +53,7 @@ boot.img
 core.img
 ```
 
-core.img 文件可以识别文件系统，因此它的作用是根据系统路径**定位和加载 stage 2**。同样，当 stage 2 加载到 RAM 后，控制权也随之转移。
+core.img 文件可以识别文件系统，因此它的作用是根据安装时确定的系统路径**定位和加载 stage 2**。同样，当 stage 2 加载到 RAM 后，控制权也随之转移。
 
 #### stage 2
 
@@ -84,6 +86,8 @@ vmlinuz-4.18.0-305.12.1.el8_4.x86_64
 vmlinuz-4.18.0-305.3.1.el8.x86_64
 ```
 
+内核通过压缩自身来节省存储空间，所以当选定的内核被加载到内存中后，它首先需要进行解压缩（extracting）。一旦解压完成，内核便会开始**加载 Systemd 并将控制权移交给它**。此时 Boot 阶段全部完成，只有Linux 内核和 Systemd 正在运行，因此用户还无法执行任何任务。
+
 ## Startup
 
 ## 参考文献
@@ -92,6 +96,6 @@ vmlinuz-4.18.0-305.3.1.el8.x86_64
 
 [INT 13H - Wikipedia](https://en.wikipedia.org/wiki/INT_13H)
 
-[主引导记录](https://zh.wikipedia.org/wiki/%E4%B8%BB%E5%BC%95%E5%AF%BC%E8%AE%B0%E5%BD%95)
+[主引导记录 - Wikipedia](https://zh.wikipedia.org/wiki/%E4%B8%BB%E5%BC%95%E5%AF%BC%E8%AE%B0%E5%BD%95)
 
 [An introduction to the Linux boot and startup processes](https://opensource.com/article/17/2/linux-boot-and-startup)

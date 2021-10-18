@@ -11,6 +11,11 @@ menu:
 weight: 800
 ---
 
+TODO:
+
+- Set Root
+- Initerd/initramfs
+
 启动一台 Linux 机器的过程可以分为两个部分：Boot 和 Startup。其中，Boot 起始于计算机启动，在内核初始化完成且 Systemd 进程开始加载后结束。紧接着， Startup 接管任务，使计算机达到一个用户可操作的状态。
 
 ![202110171642](https://cdn.jsdelivr.net/gh/koktlzz/ImgBed@master/202110171642.jpeg)
@@ -53,7 +58,7 @@ boot.img
 core.img
 ```
 
-core.img 文件可以识别文件系统，因此它的作用是根据安装时确定的系统路径**定位和加载 stage 2**。同样，当 stage 2 加载到 RAM 后，控制权也随之转移。
+既然 core.img 文件可以识别文件系统，那么它就能够根据安装时确定的系统路径**定位和加载 stage 2**。同样，当 stage 2 加载到 RAM 后，控制权也随之转移。
 
 #### stage 2
 
@@ -89,24 +94,11 @@ archelp.mod
 ```shell
 [root@bastion ~]# ls /etc/grub.d/
 00_header  00_tuned  01_users  10_linux  20_linux_xen  20_ppc_terminfo  30_os-prober  40_custom  41_custom  README
-[root@bastion ~]# cat /etc/default/grub
-GRUB_TIMEOUT=5
-GRUB_DISTRIBUTOR="$(sed 's, release .*$,,g' /etc/system-release)"
-GRUB_DEFAULT=saved
-GRUB_DISABLE_SUBMENU=true
-GRUB_TERMINAL_OUTPUT="console"
-GRUB_CMDLINE_LINUX="rd.lvm.lv=rhel_host-10-200-4-125/root rhgb quiet"
 ```
 
-40_custom 和 41_custom 文件常用于用户对 GRUB 配置的修改。如将一台 CentOS 系统的计算机升级为 CoreOS 系统，可将 40_custom 文件配置为：
+40_custom 和 41_custom 文件常用于用户对 GRUB2 配置的修改。如将一台 CentOS 系统的计算机升级为 CoreOS 系统，可在 40_custom 文件末尾追加如下配置：
 
 ```shell
-[root@bastion grub.d]# cat 40_custom
-#!/bin/sh
-exec tail -n +3 $0
-# This file provides an easy way to add custom menu entries.  Simply type the
-# menu entries you want to add after this comment.  Be careful not to change
-# the 'exec tail' line above.
 menuentry 'coreos' {
         set root='hd0,msdos1'
         linux16 /rhcos-live-kernel-x86_64 coreos.inst=yes coreos.inst.install_dev=vda rd.neednet=1 console=tty0 console=ttyS0 coreos.live.rootfs_url=http://{{HTTP-Server-Path}}/rhcos-live-rootfs.x86_64.img coreos.inst.ignition_url=http://{{HTTP-Server-Path}}/master.ign ip=dhcp
@@ -114,13 +106,18 @@ menuentry 'coreos' {
 }
 ```
 
-上述文件实际上包含了三个命令：
+Menuentry 中实际上包含了三个 Shell 命令：
 
-- `set root='hd0,msdos1'`：指定 /boot 目录在计算机硬件上的位置。本例中的 hd 代表硬盘（hard drive），0 代表第一块硬盘，mosdos 代表分区格式，1 代表 第一个分区。详细的硬件命名规范见 [Naming convention](https://www.gnu.org/software/grub/manual/grub/grub.html#Naming-convention)；
-- `linux16 /rhcos-live-kernel-x86_64`：以 16 位模式从 rhcos-live-kernel-x86_64 文件中加载 Linux 内核映像。本例中还分别通过 coreos.live.rootfs_url 和 coreos.inst.ignition_url 指定 rootfs 镜像文件和点火文件的下载链接，`ip=dhcp`则代表该计算机网络将由 DHCP 服务器动态配置。当然也可以将静态配置写入其中，如`ip={{HostIP}}::{{Gateway}}:{{Genmask}}:{{Hostname}}::none nameserver={{DNSServer}}`；
+- `set root='hd0,msdos1'`：指定 GRUB2 文件在计算机硬件上的位置。本例中的 hd 代表硬盘（hard drive），0 代表第一块硬盘，mosdos 代表分区格式，1 代表第一个分区。详细的硬件命名规范见 [Naming Convention](https://www.gnu.org/software/grub/manual/grub/grub.html#Naming-convention)；
+- `linux16 /rhcos-live-kernel-x86_64`：以 16 位模式从 rhcos-live-kernel-x86_64 文件中加载 Linux 内核映像。本例中还分别通过 coreos.live.rootfs_url 和 coreos.inst.ignition_url 参数指定 rootfs 镜像文件和点火文件的下载链接，`ip=dhcp`则代表该计算机网络将由 DHCP 服务器动态配置。当然也可以写入静态配置，其标准格式为：`ip={{HostIP}}::{{Gateway}}:{{Genmask}}:{{Hostname}}::none nameserver={{DNSServer}}`；
 - `initrd16 /rhcos-live-initramfs.x86_64.img`：加载 Linux 内核所需的初始 ramdisk。
 
-然后还需要将 /etc/default/grub 文件中[`GRUB_DEFAULT=saved`](https://www.gnu.org/software/grub/manual/grub/grub.html#Simple-configuration)修改为`GRUB_DEFAULT="coreos"`，使其与 40_custom 文件中的`menuentry 'coreos'`对应。最后使用命令`grub2-mkconfig -o /boot/grub2/grub.cfg`重新生成一份 grub.cfg 文件，这样系统重启后 GRUB2 就会根据我们的配置来加载内核了。
+> 在早期的 Linux 系统中，一般就只有软盘或者硬盘被用来作为 Linux 的根文件系统，因此很容易把这些设备的驱动程序集成到内核中。但是现在根文件系统 可能保存在各种存储设备上，包括 SCSI, SATA, U 盘等等。因此把这些设备驱动程序全部编译到内核中显得不太方便。在 Linux 内核模块自动加载机制的介绍中，我们看到利用 udevd 可以实现实现内核模 块的自动加载，因此我们希望根文件系统的设备驱动程序也能够实现自动加载。但是这里有一个矛盾，udevd 是一个可执行文件，在根文件系统被挂载前，是不 可能执行 udevd 的，但是如果 udevd 没有启动，那就无法自动加载根根据系统设备的驱动程序，同时也无法在/dev 目录下建立相应的设备节点。为了解决这个矛盾，于是出现了 initrd(boot loader initialized RAM disk)。initrd 是一个被压缩过的小型根目录，这个目录中包含了启动阶段中必须的驱动模块，可执行文件和启动脚本。包括上面提到的 udevd，当 系统启动的时候，booload 会把 initrd 文件读到内存中，然后把 initrd 的起始地址告诉内核。内核在运行过程中会解压 initrd，然后把 initrd 挂载为根目录，然后执行根目录中的/initrc 脚本，您可以在这个脚本中运行 initrd 中的 udevd，让它来自动加载设备驱动程序以及 在/dev 目录下建立必要的设备节点。在 udevd 自动加载磁盘驱动程序之后，就可以 mount 真正的根目录，并切换到这个根目录中。
+> Linux 启动需要加载内核文件，但需要文件系统；而使用文件系统有需要内核，这就产生了一个先有鸡还是先有蛋的问题。
+>
+> initrd(Initial RAM Disk)，它在 stage2 这个步骤就被拷贝到了内存中，这个文件是在安装系统时产生的，是一个临时的根文件系统 (rootfs)。因为 Kernel 为了精简，只保留了最基本的模块，因此，Kernel 上并没有各种硬件的驱动程序，也就无法识 rootfs 所在的设备，故产生了 initrd 这个文件，该文件装载了必要的驱动模块，当 Kernel 启动时，可以从 initrd 文件中装载驱动模块，直到挂载真正的 rootfs，然后将 initrd 从内存中移除。
+
+除此之外还需要将 /etc/default/grub 文件中的 [GRUB_DEFAULT=saved](https://www.gnu.org/software/grub/manual/grub/grub.html#Simple-configuration) 修改为 GRUB_DEFAULT="coreos"，使其与 40_custom 文件中的`menuentry 'coreos'`对应。最后使用命令`grub2-mkconfig -o /boot/grub2/grub.cfg`重新生成一份 grub.cfg 文件，这样系统重启后 GRUB2 就会根据我们的配置来加载内核了。
 
 ### 内核初始化
 
@@ -145,7 +142,7 @@ vmlinuz-4.18.0-305.3.1.el8.x86_64
 
 [主引导记录 - Wikipedia](https://zh.wikipedia.org/wiki/%E4%B8%BB%E5%BC%95%E5%AF%BC%E8%AE%B0%E5%BD%95)
 
-[An introduction to the Linux boot and startup processes](https://opensource.com/article/17/2/linux-boot-and-startup)
+[An Introduction To the Linux Boot and Startup Processes](https://opensource.com/article/17/2/linux-boot-and-startup)
 
 [Linux GRUB2 配置简介](https://linux.cn/article-8603-1.html)
 

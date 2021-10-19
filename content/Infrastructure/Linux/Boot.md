@@ -57,7 +57,7 @@ GRUB1 的引导过程可以分为三个阶段：stage 1、stage 1.5 和 stage 2�
 
 ![20211015161614](https://cdn.jsdelivr.net/gh/koktlzz/NoteImg@main/20211015161614.png)
 
-主引导记录首部的引导代码便是 stage 1 文件 boot.img，它和 stage 1.5 文件 core.img 均位于 /boot/grub2/i386-pc目录下：
+主引导记录首部的引导代码便是 stage 1 文件 boot.img，它和 stage 1.5 文件 core.img 均位于 /boot/grub2/i386-pc 目录下：
 
 ```shell
 [root@bastion ~]# du -b /boot/grub2/i386-pc/*.img 
@@ -73,16 +73,16 @@ GRUB1 的引导过程可以分为三个阶段：stage 1、stage 1.5 和 stage 2�
 
 ```shell
 [root@centos6.5 ~]# du -b /boot/grub/* | grep stage1_5
-13380	/boot/grub/e2fs_stage1_5
-12620	/boot/grub/fat_stage1_5
-11748	/boot/grub/ffs_stage1_5
-11756	/boot/grub/iso9660_stage1_5
-13268	/boot/grub/jfs_stage1_5
-11956	/boot/grub/minix_stage1_5
-14412	/boot/grub/reiserfs_stage1_5
-12024	/boot/grub/ufs2_stage1_5
-11364	/boot/grub/vstafs_stage1_5
-13964	/boot/grub/xfs_stage1_5
+13380    /boot/grub/e2fs_stage1_5
+12620    /boot/grub/fat_stage1_5
+11748    /boot/grub/ffs_stage1_5
+11756    /boot/grub/iso9660_stage1_5
+13268    /boot/grub/jfs_stage1_5
+11956    /boot/grub/minix_stage1_5
+14412    /boot/grub/reiserfs_stage1_5
+12024    /boot/grub/ufs2_stage1_5
+11364    /boot/grub/vstafs_stage1_5
+13964    /boot/grub/xfs_stage1_5
 ```
 
 GRUB2 中的 core.img 不仅整合了上述文件系统驱动，还新增了菜单处理等模块，这也是其优于 GRUB1 的地方。我们可以在 [GNU GRUB Manual 2.06: Images](https://www.gnu.org/software/grub/manual/grub/html_node/Images.html#Images) 中找到对各种 GRUB 镜像文件的详细介绍。
@@ -139,11 +139,11 @@ menuentry 'coreos' {
 
 - `set root='hd0,msdos1'`：指定 GRUB2 的根目录在计算机硬件上的位置。此时根文件系统（rootfs）还未挂载，GRUB2 只能识别自身根目录（即 /boot）的文件系统。我们只需把内核文件放置在 /boot 目录下，GRUB2 便可以定位和加载它。本例中的 hd 代表硬盘（hard drive），0 代表第一块硬盘，mosdos 代表分区格式，1 代表第一个分区。详细的硬件命名规范见 [Naming Convention](https://www.gnu.org/software/grub/manual/grub/grub.html#Naming-convention)；
 - `linux16 /rhcos-live-kernel-x86_64`：以 16 位模式从 rhcos-live-kernel-x86_64 文件（CoreOS 系统内核）中加载 Linux 内核映像。本例中还分别通过 coreos.live.rootfs_url 和 coreos.inst.ignition_url 参数指定了 rootfs 镜像文件和点火文件的下载链接，`ip=dhcp`则代表该计算机网络将由 DHCP 服务器动态配置。当然也可以写入静态配置，其标准格式为：`ip={{HostIP}}::{{Gateway}}:{{Genmask}}:{{Hostname}}::none nameserver={{DNSServer}}`；
-- `initrd16 /rhcos-live-initramfs.x86_64.img`：加载 Linux 内核所需的初始 RAM Disk。由于内核文件中没有各种硬件的驱动程序，因此无法识别 rootfs 所在的设备。而 initramfs 是一个临时的rootfs，内核可以从中加载驱动程序。待真正的 rootfs 挂载完毕后，它便会从内存中移除。
+- `initrd16 /rhcos-live-initramfs.x86_64.img`：加载 Linux 内核所需的初始 RAM Disk。由于内核文件中没有各种硬件的驱动程序，因此无法识别 rootfs 所在的设备。而 initramfs 是一个临时的 rootfs，内核可以从中加载驱动程序。待真正的 rootfs 挂载完毕后，它便会从内存中移除。
 
 除此之外还需要将 /etc/default/grub 文件中的 [GRUB_DEFAULT=saved](https://www.gnu.org/software/grub/manual/grub/grub.html#Simple-configuration) 修改为 GRUB_DEFAULT="coreos"，使其与 40_custom 文件中的`menuentry 'coreos'`对应。最后使用命令`grub2-mkconfig -o /boot/grub2/grub.cfg`来重新生成一份 grub.cfg 文件，这样计算机重启后 GRUB2 就会根据我们的配置来加载 CoreOS 系统的内核了。
 
-至此，我们已经明白了为什么“仅依靠添加和修改文件就能改变一台计算机的操作系统”。但此时计算机还未达到用户可操作的状态，让我们一起来看看内核被加载到内存后还发生了什么。
+至此我们已经明白了为什么“仅依靠添加和修改文件就能改变一台计算机的操作系统”，但计算机想要达到用户可操作的状态还需要进一步工作。让我们一起来看看内核被加载到内存后发生了什么。
 
 ### 内核初始化
 

@@ -11,10 +11,21 @@ menu:
 weight: 800
 ---
 
-TODO:
+## 前言
 
-- Set Root
-- Initerd/initramfs
+OpenShift 4.X 版本要求安装在操作系统为 CoreOS 的机器上，因此 [官方文档](https://docs.openshift.com/container-platform/4.6/installing/installing_bare_metal/installing-restricted-networks-bare-metal.html#installation-user-infra-machines-pxe_installing-restricted-networks-bare-metal) 给出了使用 PXE 或 IPXE 引导 CoreOS 系统的步骤。我们可以将其改造为适用于 BIOS 和 GRUB2 引导的方法：
+
+1. 从 [镜像下载页](https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.6/?extIdCarryOver=true&sc_cid=701f2000001Css5AAC) 下载安装所需版本的 kernel、initramfs 和 rootfs 文件，并将 rootfs 和点火文件（*.ign）上传到自建的 HTTP 服务器上；
+
+2. 将 kernel 和 initramfs 文件拷贝到安装机器的 /boot 目录下；
+
+3. 根据需求修改 /boot/grub2 目录下的 grub.cfg 文件；
+
+4. 重启机器。
+
+对于操作系统初学者来说，很难想象简单地添加和修改几个文件就可以改变一台计算机的操作系统。为了解其实现原理，我们将对 Linux 的启动流程进行讨论，并从中说明上述操作是如何影响操作系统的。
+
+## Linux 启动流程
 
 启动一台 Linux 机器的过程可以分为两个部分：Boot 和 Startup。其中，Boot 起始于计算机启动，在内核初始化完成且 Systemd 进程开始加载后结束。紧接着， Startup 接管任务，使计算机达到一个用户可操作的状态。
 
@@ -22,7 +33,7 @@ TODO:
 
 ## Boot
 
-如上图所示，Boot 过程又可以详细地分为三个部分：
+如上图所示，Boot 过程又可以细分为三个部分：
 
 - BIOS POST
 - Boot Loader
@@ -36,7 +47,9 @@ POST 检查完毕后会发出一个 BIOS 中断调用 [INT 13H](https://en.wikip
 
 ### Boot Loader
 
-大多数 Linux 发行版使用三种 Boot Loader 程序：GRUB、GRUB2 和 LILO，其中 GRUB2 是最新且使用最为广泛的。GRUB2 代表“GRand Unified Bootloader, version 2”，**它能够让计算机找到操作系统内核并将其加载到内存中**。GRUB2 还允许用户选择从几种不同的内核中引导计算机，如果更新的内核版本出现兼容性问题，我们就可以恢复到先前内核版本。GRUB2 的引导过程可以分为以下三个阶段：
+大多数 Linux 发行版使用三种 Boot Loader 程序：GRUB、GRUB2 和 LILO，其中 GRUB2 是最新且使用最为广泛的。GRUB2 代表“GRand Unified Bootloader, version 2”，**它能够让计算机找到操作系统内核并将其加载到内存中**。GRUB2 还允许用户选择从几种不同的内核中引导计算机，如果更新的内核版本出现兼容性问题，我们就可以恢复到先前内核版本。
+
+GRUB 的引导过程可以分为三个阶段：stage 1、stage 1.5 和 stage 2。虽然 GRUB2 中并没有 stage 的概念，但两者的工作方式基本相同。为了方便说明，我们在讨论 GRUB2 时将沿用 GRUB 中 stage 的说法。
 
 #### stage 1
 
@@ -48,14 +61,14 @@ POST 检查完毕后会发出一个 BIOS 中断调用 [INT 13H](https://en.wikip
 
 #### stage 1.5
 
-446 字节的 stage 1 文件放不下能够识别文件系统的代码，只能通过计算扇区的偏移量来定位和加载 stage 1.5，因此 stage 1.5 文件 core.img 必须位于主引导记录和驱动器的第一个分区（partition）之间。第一个分区从扇区 63 开始，与位于扇区 0 的主引导记录之间有 62 个扇区（每个 512 字节），因此有足够的空间存储大小为 25389 字节的 core.img 文件。
+446 字节的 stage 1 文件放不下能够识别文件系统的代码，只能通过计算扇区的偏移量来定位和加载 stage 1.5，因此 stage 1.5 文件 core.img 必须位于主引导记录和驱动器的第一个分区（partition）之间。第一个分区从扇区 63 开始，与位于扇区 0 的主引导记录之间有 62 个扇区（每个 512 字节），因此有足够的空间存储大小为 26664 字节的 core.img 文件。
 
 core.img 文件中包含一些常见的文件系统驱动程序，如 EXT、FAT 和 NTFS 等，它和 boot.img 文件均位于 /boot/grub2 目录下：
 
 ```shell
-[root@bastion ~]# ls /boot/grub2/i386-pc/ | grep img
-boot.img
-core.img
+[root@bastion ~]# du -b /boot/grub2/i386-pc/*.img 
+512     /boot/grub2/i386-pc/boot.img
+26664   /boot/grub2/i386-pc/core.img
 ```
 
 既然 core.img 文件可以识别文件系统，那么它就能够根据安装时确定的系统路径**定位和加载 stage 2**。同样，当 stage 2 加载到 RAM 后，控制权也随之转移。
@@ -134,7 +147,17 @@ vmlinuz-4.18.0-305.3.1.el8.x86_64
 
 ## Startup
 
+## Future Work
+
+bios-mbr/uefi-gpt
+
+ipxe/pxe
+
+systemd
+
 ## 参考文献
+
+[Restricted network bare metal installation](https://docs.openshift.com/container-platform/4.6/installing/installing_bare_metal/installing-restricted-networks-bare-metal.html#installation-user-infra-machines-pxe_installing-restricted-networks-bare-metal)
 
 [BIOS - Wikipedia](https://zh.wikipedia.org/wiki/BIOS)
 

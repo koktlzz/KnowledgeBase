@@ -118,14 +118,14 @@ archelp.mod
 # from /etc/grub.d and settings from /etc/default/grub
 ```
 
-根据该文件的注释我们可以知道，它实际上是由 grub2-mkconfig 命令使用 /etc/grub.d 目录下的一些模板文件并根据 /etc/default/grub 文件中的设置而生成的：
+通过该文件的注释我们可以知道，它实际上是由 grub2-mkconfig 命令使用 /etc/grub.d 目录下的一些模板文件并根据 /etc/default/grub 文件中的设置生成的：
 
 ```shell
 [root@bastion ~]# ls /etc/grub.d/
 00_header  00_tuned  01_users  10_linux  20_linux_xen  20_ppc_terminfo  30_os-prober  40_custom  41_custom  README
 ```
 
-40_custom 和 41_custom 文件常用于用户对 GRUB2 配置的修改，实际上我们对机器的操作也是从这里开始的。为了让 GRUB2 在机器启动时选择 CoreOS 系统内核而非默认的 CentOS，需要在原始 40_custom 文件末尾添加：
+40_custom 和 41_custom 文件常用于用户对 GRUB2 配置的修改，实际上我们对机器的操作也是从这里开始的。为了让 GRUB2 在机器启动时选择 CoreOS 系统内核而非默认的 CentOS，需要在原始 40_custom 文件末尾添加如下内容：
 
 ```shell
 menuentry 'coreos' {
@@ -137,13 +137,19 @@ menuentry 'coreos' {
 
 所示的 Menuentry 由三条 Shell 命令组成：
 
-- `set root='hd0,msdos1'`：指定 GRUB2 的根目录在计算机硬件上的位置。此时根文件系统（rootfs）还未挂载，GRUB2 只能识别自身根目录（即 /boot）的文件系统。我们只需把内核文件放置在 /boot 目录下，GRUB2 便可以定位和加载它。本例中的 hd 代表硬盘（hard drive），0 代表第一块硬盘，mosdos 代表分区格式，1 代表第一个分区。详细的硬件命名规范见 [Naming Convention](https://www.gnu.org/software/grub/manual/grub/grub.html#Naming-convention)；
-- `linux16 /rhcos-live-kernel-x86_64`：以 16 位模式从 rhcos-live-kernel-x86_64 文件（CoreOS 系统内核）中加载 Linux 内核映像。本例中还分别通过 coreos.live.rootfs_url 和 coreos.inst.ignition_url 参数指定了 rootfs 镜像文件和点火文件的下载链接，`ip=dhcp`则代表该计算机网络将由 DHCP 服务器动态配置。当然也可以写入静态配置，其标准格式为：`ip={{HostIP}}::{{Gateway}}:{{Genmask}}:{{Hostname}}::none nameserver={{DNSServer}}`；
-- `initrd16 /rhcos-live-initramfs.x86_64.img`：加载 Linux 内核所需的初始 RAM Disk。由于内核文件中没有各种硬件的驱动程序，因此无法识别 rootfs 所在的设备。而 initramfs 是一个临时的 rootfs，内核可以从中加载驱动程序。待真正的 rootfs 挂载完毕后，它便会从内存中移除。
+- `set root='hd0,msdos1'`
+- `linux16 /rhcos-live-kernel-x86_64 ...`
+- `initrd16 /rhcos-live-initramfs.x86_64.img`
 
-除此之外还需要将 /etc/default/grub 文件中的 [GRUB_DEFAULT=saved](https://www.gnu.org/software/grub/manual/grub/grub.html#Simple-configuration) 修改为 GRUB_DEFAULT="coreos"，使其与 40_custom 文件中的`menuentry 'coreos'`对应。最后使用命令`grub2-mkconfig -o /boot/grub2/grub.cfg`来重新生成一份 grub.cfg 文件，这样计算机重启后 GRUB2 就会根据我们的配置来加载 CoreOS 系统的内核了。
+第一条命令指定了 GRUB2 的根目录，也就是 /boot 所在分区在计算机硬件上的位置。既然我们已经将内核文件拷贝到了 /boot 目录下，那么能够识别文件系统的 GRUB2 便可以定位和加载它。本例中`hd`代表硬盘（hard drive），`0`代表第一块硬盘，`mosdos`代表分区格式，`1` 代表第一个分区。详细的硬件命名规范见 [Naming Convention](https://www.gnu.org/software/grub/manual/grub/grub.html#Naming-convention)。
 
-至此我们已经明白了为什么“仅依靠添加和修改文件就能改变一台计算机的操作系统”，但计算机想要达到用户可操作的状态还需要进一步工作。让我们一起来看看内核被加载到内存后发生了什么。
+第二条命令将从`rhcos-live-kernel-x86_64`（CoreOS 系统的内核文件）中以 16 位模式加载 Linux 内核映像，并通过`coreos.live.rootfs_url`和`coreos.inst.ignition_url`参数指定根文件系统（rootfs）的镜像文件和点火文件的下载链接。`ip=dhcp`代表该计算机网络将由 DHCP 服务器动态配置，也可以按`ip={{HostIP}}::{{Gateway}}:{{Genmask}}:{{Hostname}}::none nameserver={{DNSServer}}`的格式写入静态配置。
+
+第三条命令将从`rhcos-live-initramfs.x86_64.img`中加载 RAM Filesystem。GRUB2 加载的内核实际上仅仅包含了内核的核心模块，而一些硬件驱动模块位于 /lib/modules/$(uname -r)/kernel/ 目录下，必须在 rootfs 挂载完毕后才能被读取。但如果内核本身不包含这些模块，自然也就无法挂载 rootfs，从而陷入了死循环之中。为了解决这一问题，initramfs（其前身为 initrd）应运而生。它是一个包含了必要驱动模块的临时 rootfs，内核可以从中加载所需的驱动程序。待真正的 rootfs 挂载完毕后，它便会从内存中移除。
+
+除此之外我们还需要将 /etc/default/grub 文件中的 [GRUB_DEFAULT=saved](https://www.gnu.org/software/grub/manual/grub/grub.html#Simple-configuration) 修改为 GRUB_DEFAULT="coreos"，使其与 40_custom 文件中的`menuentry 'coreos'`对应。最后使用命令`grub2-mkconfig -o /boot/grub2/grub.cfg`来重新生成一份 grub.cfg 文件，这样计算机重启后 GRUB2 就会根据我们的配置去加载 CoreOS 系统的内核了。
+
+至此我们已经明白了为什么“仅依靠添加和修改文件就能改变一台计算机的操作系统”，但计算机想要达到用户可操作状态还远不止于此。让我们再来看看内核被加载到内存后发生了什么。
 
 ### 内核初始化
 
@@ -182,4 +188,4 @@ systemd
 
 [Linux GRUB2 配置简介](https://linux.cn/article-8603-1.html)
 
-[GNU GRUB Manual 2.06](https://www.gnu.org/software/grub/manual/grub/grub.html)
+[GNU GRUB Manual 2.06](https://www.gnu.org/software/grub/manual/grub/grub.html) 

@@ -188,4 +188,4 @@ systemd
 
 [Linux GRUB2 配置简介](https://linux.cn/article-8603-1.html)
 
-[GNU GRUB Manual 2.06](https://www.gnu.org/software/grub/manual/grub/grub.html) 
+[GNU GRUB Manual 2.06](https://www.gnu.org/software/grub/manual/grub/grub.html)

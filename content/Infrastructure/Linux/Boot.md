@@ -249,17 +249,18 @@ emergency.target                    v
                               graphical.target
 ```
 
-如上图所示，想要到达到某个 target，其依赖的所有 target 和 service 必须先完成。比如实现 sysinit.target，就需要挂载文件系统（local-fs.target）、设置交换文件（swap.target）、初始化 udev （various low-level services）和设置加密服务（cryptsetup.target）等。不过，同一个 target 的不同依赖可以并行执行。
+如上图所示，想要到达到某个 target，其依赖的所有 target 和 service 就必须已完成加载。如实现 sysinit.target，需要先挂载文件系统（local-fs.target）、设置交换文件（swap.target）、初始化 udev （various low-level services）和设置加密服务（cryptsetup.target）等。不过，同一个 target 的不同依赖项可以并行执行。
 
-当计算机达到 multi-user.target 或 graphical.target 时，它的漫漫启动之路就走到了尽头。不过对于我们用户来说，真正的挑战才刚刚开始。
+当计算机达到 multi-user.target 或 graphical.target 时，它的漫漫启动之路就走到了尽头。但为了满足用户多样的需求，它所面临的挑战其实才刚刚开始。
 
 ## Future Work
 
-bios-mbr/uefi-gpt
+虽然本文已对 Linux 的启动流程进行了较为深入地讨论，但仍有一些 Topic 值得我们继续探索：
 
-ipxe/pxe
-
-systemd 配置
+- 前言提到 RedHat 官方给出了 IPXE/PXE 引导 CoreOS 系统的方法，那么这项技术又是什么呢？
+- MBR 只有 446 个字节，可为什么 boot.img 文件却有 512 个字节？
+- 目前已经有越来越多的计算机使用 UEFI 和 GPT 来代替 BIOS 和 MBR，其优势体现在哪？
+- 我们该如何理解 systemd 的配置文件？如何使用 systemd 部署我们的应用？
 
 ## 参考文献
 

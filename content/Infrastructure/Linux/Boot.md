@@ -27,7 +27,7 @@ OpenShift 4.X 版本要求安装在操作系统为 CoreOS 的机器上，因此 
 
 ## Linux 启动流程
 
-启动一台 Linux 机器的过程可以分为两个部分：Boot 和 Startup。其中，Boot 起始于计算机启动，在内核初始化完成且 Systemd 进程开始加载后结束。紧接着， Startup 接管任务，使计算机达到一个用户可操作的状态。
+启动一台 Linux 机器的过程可以分为两个部分：Boot 和 Startup。其中，Boot 起始于计算机启动，在内核初始化完成且 systemd 进程开始加载后结束。紧接着， Startup 接管任务，使计算机达到一个用户可操作的状态。
 
 ![202110171642](https://cdn.jsdelivr.net/gh/koktlzz/ImgBed@master/202110171642.jpeg)
 
@@ -145,7 +145,7 @@ menuentry 'coreos' {
 
 第二条命令将从`rhcos-live-kernel-x86_64`（CoreOS 系统的内核文件）中以 16 位模式加载 Linux 内核映像，并通过`coreos.live.rootfs_url`和`coreos.inst.ignition_url`参数指定根文件系统（rootfs）的镜像文件和点火文件的下载链接。`ip=dhcp`代表该计算机网络将由 DHCP 服务器动态配置，也可以按`ip={{HostIP}}::{{Gateway}}:{{Genmask}}:{{Hostname}}::none nameserver={{DNSServer}}`的格式写入静态配置。
 
-第三条命令将从`rhcos-live-initramfs.x86_64.img`中加载 RAM Filesystem。GRUB2 加载的内核实际上仅仅包含了内核的核心模块，而一些硬件驱动模块位于 /lib/modules/$(uname -r)/kernel/ 目录下，必须在 rootfs 挂载完毕后才能被读取。但如果内核本身不包含这些模块，自然也就无法挂载 rootfs，从而陷入了死循环之中。为了解决这一问题，initramfs（其前身为 initrd）应运而生。它是一个包含了必要驱动模块的临时 rootfs，内核可以从中加载所需的驱动程序。待真正的 rootfs 挂载完毕后，它便会从内存中移除。
+第三条命令将从`rhcos-live-initramfs.x86_64.img`中加载 RAM Filesystem。GRUB2 读取的内核文件实际上只包含了内核的核心模块，缺少硬件驱动模块的它无法完成 rootfs 的挂载。然而这些硬件驱动模块位于 /lib/modules/$(uname -r)/kernel/ 目录下，必须在 rootfs 挂载完毕后才能被识别和加载。为了解决这一问题，initramfs（前身为 initrd）应运而生。它是一个包含了必要驱动模块的临时 rootfs，内核可以从中加载所需的驱动程序。待真正的 rootfs 挂载完毕后，它便会从内存中移除。
 
 除此之外我们还需要将 /etc/default/grub 文件中的 [GRUB_DEFAULT=saved](https://www.gnu.org/software/grub/manual/grub/grub.html#Simple-configuration) 修改为 GRUB_DEFAULT="coreos"，使其与 40_custom 文件中的`menuentry 'coreos'`对应。最后使用命令`grub2-mkconfig -o /boot/grub2/grub.cfg`来重新生成一份 grub.cfg 文件，这样计算机重启后 GRUB2 就会根据我们的配置去加载 CoreOS 系统的内核了。
 
@@ -162,9 +162,96 @@ vmlinuz-4.18.0-305.12.1.el8_4.x86_64
 vmlinuz-4.18.0-305.3.1.el8.x86_64
 ```
 
-内核通过压缩自身来节省存储空间，所以当选定的内核被加载到内存中后，它首先需要进行解压缩（extracting）。一旦解压完成，内核便会开始**加载 Systemd 并将控制权移交给它**。此时 Boot 阶段全部完成，只有 Linux 内核和 Systemd 正在运行，因此用户还无法执行任何任务。
+内核通过压缩自身来节省存储空间，所以当选定的内核被加载到内存中后，它首先需要进行解压缩（extracting）。一旦解压完成，内核便会开始**加载 systemd 并将控制权移交给它**。
 
 ## Startup 阶段
+
+systemd 是所有进程之父，它负责**使计算机达到可以完成生产工作的状态**。其功能比过去的 init 程序要丰富得多，包括挂载文件系统、启动和管理计算机所需的系统服务。当然你也可以将一些应用（如 Docker）以 systemd 的方式启动，但它们与 Linux 的启动无关，因此不在本文的讨论范围之内。
+
+首先，systemd 根据 /etc/fstab 文件中的配置挂载文件系统。然后读取 /etc 目录下的配置文件，包括其自身的配置文件 /etc/systemd/system/default.target。该文件指定了 systemd 需要引导计算机到达的最终目标和状态，实际上是一个软链接：
+
+```shell
+[root@bastion ~]# ls /etc/systemd/system/default.target -l
+lrwxrwxrwx. 1 root root 37 Oct 17  2019 /etc/systemd/system/default.target -> /lib/systemd/system/multi-user.target
+```
+
+在我使用的 bastion 服务器上，它指向的是 multi-user.target；对于带有图形化界面的桌面工作站，它通常指向 graphics.target；而对于单用户模式的机器，它将指向 emergency.target。target 等效于过去 SystemV 中的 [运行级别](https://zh.wikipedia.org/wiki/%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB)（Runlevel），它提供了别名以实现向后兼容性：
+
+| SystemV Runlevel | systemd target    | systemd target alias | Description                                            |
+| ---------------- | ----------------- | -------------------- | ------------------------------------------------------ |
+|                  | halt.target       |                      | 在不关闭电源的情况下中止系统。                                        |
+| 0                | poweroff.target   | runlevel0.target     | 中止系统并关闭电源。                                             |
+| s                | emergency.target  |                      | 单用户模式。 没有服务正在运行，也未挂载文件系统。仅在主控制台上运行一个紧急 Shell，供用户与系统交互。 |
+| 1                | rescue.target     | runlevel1.target     | 一个基本系统。文件系统已挂载，只运行最基本的服务和主控制台上的紧急 Shell。               |
+| 2                |                   | runlevel2.target     | 多用户模式。虽然还没有网络连接，但不依赖网络的所有非 GUI 服务都已运行。                 |
+| 3                | multi-user.target | runlevel3.target     | 所有服务都在运行，但只能使用命令行界面（CLI）。                              |
+| 4                |                   | runlevel4.target     | 用户自定义                                                  |
+| 5                | graphical.target  | runlevel5.target     | 所有服务都在运行，并且可以使用图形化界面（GUI）。                             |
+| 6                | reboot.target     | runlevel6.target     | 重启系统                                                   |
+
+每个 target 都在其配置文件中指定了一组依赖，由 systemd 负责启动。这些依赖是 Linux 达到某个运行级别所必须的服务（service）。换句话说，当一个 target 配置文件中的所有 service 都已成功加载，那么系统就达到了该 target 对应的运行级别。
+
+下图展示了 systemd 启动过程中各 target 和 service 实现的一般顺序：
+
+```shell
+                   cryptsetup-pre.target veritysetup-pre.target
+                                                  |
+(various low-level                                v
+ API VFS mounts:             (various cryptsetup/veritysetup devices...)
+ mqueue, configfs,                                |    |
+ debugfs, ...)                                    v    |
+ |                                  cryptsetup.target  |
+ |  (various swap                                 |    |    remote-fs-pre.target
+ |   devices...)                                  |    |     |        |
+ |    |                                           |    |     |        v
+ |    v                       local-fs-pre.target |    |     |  (network file systems)
+ |  swap.target                       |           |    v     v                 |
+ |    |                               v           |  remote-cryptsetup.target  |
+ |    |  (various low-level  (various mounts and  |  remote-veritysetup.target |
+ |    |   services: udevd,    fsck services...)   |             |    remote-fs.target
+ |    |   tmpfiles, random            |           |             |             /
+ |    |   seed, sysctl, ...)          v           |             |            /
+ |    |      |                 local-fs.target    |             |           /
+ |    |      |                        |           |             |          /
+ \____|______|_______________   ______|___________/             |         /
+                             \ /                                |        /
+                              v                                 |       /
+                       sysinit.target                           |      /
+                              |                                 |     /
+       ______________________/|\_____________________           |    /
+      /              |        |      |               \          |   /
+      |              |        |      |               |          |  /
+      v              v        |      v               |          | /
+ (various       (various      |  (various            |          |/
+  timers...)      paths...)   |   sockets...)        |          |
+      |              |        |      |               |          |
+      v              v        |      v               |          |
+timers.target  paths.target   |  sockets.target      |          |
+      |              |        |      |               v          |
+      v              \_______ | _____/         rescue.service   |
+                             \|/                     |          |
+                              v                      v          |
+                          basic.target         rescue.target    |
+                              |                                 |
+                      ________v____________________             |
+                     /              |              \            |
+                     |              |              |            |
+                     v              v              v            |
+                 display-    (various system   (various system  |
+             manager.service     services        services)      |
+                     |         required for        |            |
+                     |        graphical UIs)       v            v
+                     |              |            multi-user.target
+emergency.service    |              |              |
+        |            \_____________ | _____________/
+        v                          \|/
+emergency.target                    v
+                              graphical.target
+```
+
+如上图所示，想要到达到某个 target，其依赖的所有 target 和 service 必须先完成。比如实现 sysinit.target，就需要挂载文件系统（local-fs.target）、设置交换文件（swap.target）、初始化 udev （various low-level services）和设置加密服务（cryptsetup.target）等。不过，同一个 target 的不同依赖可以并行执行。
+
+当计算机达到 multi-user.target 或 graphical.target 时，它的漫漫启动之路就走到了尽头。不过对于我们用户来说，真正的挑战才刚刚开始。
 
 ## Future Work
 
@@ -172,7 +259,7 @@ bios-mbr/uefi-gpt
 
 ipxe/pxe
 
-systemd
+systemd 配置
 
 ## 参考文献
 
@@ -186,6 +273,6 @@ systemd
 
 [An Introduction To the Linux Boot and Startup Processes](https://opensource.com/article/17/2/linux-boot-and-startup)
 
-[Linux GRUB2 配置简介](https://linux.cn/article-8603-1.html)
-
 [GNU GRUB Manual 2.06](https://www.gnu.org/software/grub/manual/grub/grub.html)
+
+[Bootup(7) - Linux manual page](https://man7.org/linux/man-pages/man7/bootup.7.html)

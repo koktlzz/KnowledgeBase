@@ -257,7 +257,7 @@ emergency.target                    v
 
 虽然本文已对 Linux 的启动流程进行了较为深入地讨论，但仍有一些 Topic 值得我们继续探索：
 
-- 前言提到 RedHat 官方给出了 IPXE/PXE 引导 CoreOS 系统的方法，那么这项技术又是什么呢？
+- 前言提到 RedHat 官方给出了 IPXE/PXE 引导 CoreOS 系统的方法，那么这项技术又是如何实现的呢？
 - MBR 只有 446 个字节，可为什么 boot.img 文件却有 512 个字节？
 - 目前已经有越来越多的计算机使用 UEFI 和 GPT 来代替 BIOS 和 MBR，其优势体现在哪？
 - 我们该如何理解 systemd 的配置文件？如何使用 systemd 部署我们的应用？
